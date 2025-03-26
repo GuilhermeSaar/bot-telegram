@@ -7,6 +7,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class EventDTO {
 
@@ -90,4 +91,16 @@ public class EventDTO {
     public void setTime(LocalDateTime time) {
         this.time = time;
     }
+
+    @Override
+    public String toString() {
+        return "\n" +
+                "🔖  Compromisso: " + eventName + "\n" +
+                "📂  Tipo: " + eventType + "\n" +
+                "📍  Localização: " + location + "\n" +
+                "⚠️  Prioridade: " + priority + "\n" +
+                "📝  Descrição: " + (description.isBlank() ? "Sem descrição" : description) + "\n" +
+                "🕒  Horário: " + time.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "\n";
+    }
+
 }

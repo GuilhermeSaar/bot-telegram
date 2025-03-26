@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Ignora arquivo de configuraçao de tests
+application-test.properties
+

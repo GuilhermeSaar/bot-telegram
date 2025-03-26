@@ -24,5 +24,4 @@ public class EventService {
 
         return new EventDTO(event);
     }
-
 }
