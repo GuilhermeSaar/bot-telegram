@@ -18,7 +18,6 @@ public class EventDTO {
     private String location;
     @Enumerated(EnumType.STRING)
     private Priority priority;
-    private String description;
     private LocalDateTime time;
     private Long UserId;
 
@@ -31,7 +30,6 @@ public class EventDTO {
         eventType = event.getEventType();
         location = event.getLocation();
         priority = event.getPriority();
-        description = event.getDescription();
         time = event.getTime();
     }
 
@@ -76,13 +74,7 @@ public class EventDTO {
         this.priority = priority;
     }
 
-    public String getDescription() {
-        return description;
-    }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public LocalDateTime getTime() {
         return time;
@@ -99,7 +91,6 @@ public class EventDTO {
                 "📂  Tipo: " + eventType + "\n" +
                 "📍  Localização: " + location + "\n" +
                 "⚠️  Prioridade: " + priority + "\n" +
-                "📝  Descrição: " + (description.isBlank() ? "Sem descrição" : description) + "\n" +
                 "🕒  Horário: " + time.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "\n";
     }
 

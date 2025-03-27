@@ -19,7 +19,6 @@ public class Event {
     private String location;
     @Enumerated(EnumType.STRING)
     private Priority priority;
-    private String description;
     private LocalDateTime time;
 
     @ManyToOne
@@ -29,12 +28,11 @@ public class Event {
     public Event() {
     }
 
-    public Event(String eventName, EventType eventType, String location, Priority priority, String description, LocalDateTime time, User user) {
+    public Event(String eventName, EventType eventType, String location, Priority priority, LocalDateTime time, User user) {
         this.eventName = eventName;
         this.eventType = eventType;
         this.location = location;
         this.priority = priority;
-        this.description = description;
         this.time = time;
         this.user = user;
     }
@@ -73,14 +71,6 @@ public class Event {
 
     public void setPriority(Priority priority) {
         this.priority = priority;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public LocalDateTime getTime() {
