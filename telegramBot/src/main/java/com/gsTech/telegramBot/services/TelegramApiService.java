@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 @Service
-public class TelegramBotService {
+public class TelegramApiService {
 
     @Value("${telegram.token}")
     private String token;

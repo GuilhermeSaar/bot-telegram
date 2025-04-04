@@ -1,7 +1,5 @@
 package com.gsTech.telegramBot.orm;
 
-import com.gsTech.telegramBot.enums.EventType;
-import com.gsTech.telegramBot.enums.Priority;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -14,11 +12,9 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String eventName;
-    @Enumerated(EnumType.STRING)
-    private EventType eventType;
+    private String eventType;
     private String location;
-    @Enumerated(EnumType.STRING)
-    private Priority priority;
+    private String priority;
     private LocalDateTime time;
 
     @ManyToOne
@@ -28,7 +24,7 @@ public class Event {
     public Event() {
     }
 
-    public Event(String eventName, EventType eventType, String location, Priority priority, LocalDateTime time, User user) {
+    public Event(String eventName, String eventType, String location, String priority, LocalDateTime time, User user) {
         this.eventName = eventName;
         this.eventType = eventType;
         this.location = location;
@@ -49,11 +45,11 @@ public class Event {
         this.eventName = eventName;
     }
 
-    public EventType getEventType() {
+    public String getEventType() {
         return eventType;
     }
 
-    public void setEventType(EventType eventType) {
+    public void setEventType(String eventType) {
         this.eventType = eventType;
     }
 
@@ -65,11 +61,11 @@ public class Event {
         this.location = location;
     }
 
-    public Priority getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(Priority priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 

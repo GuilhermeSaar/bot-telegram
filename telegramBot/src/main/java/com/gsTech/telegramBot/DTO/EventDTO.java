@@ -1,10 +1,6 @@
 package com.gsTech.telegramBot.DTO;
 
-import com.gsTech.telegramBot.enums.EventType;
-import com.gsTech.telegramBot.enums.Priority;
 import com.gsTech.telegramBot.orm.Event;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,11 +9,8 @@ public class EventDTO {
 
     private Long id;
     private String eventName;
-    @Enumerated(EnumType.STRING)
-    private EventType eventType;
+    private String eventType;
     private String location;
-    @Enumerated(EnumType.STRING)
-    private Priority priority;
     private LocalDateTime time;
     private Long UserId;
 
@@ -29,7 +22,6 @@ public class EventDTO {
         eventName = event.getEventName();
         eventType = event.getEventType();
         location = event.getLocation();
-        priority = event.getPriority();
         time = event.getTime();
     }
 
@@ -50,11 +42,11 @@ public class EventDTO {
         this.eventName = eventName;
     }
 
-    public EventType getEventType() {
+    public String getEventType() {
         return eventType;
     }
 
-    public void setEventType(EventType eventType) {
+    public void setEventType(String eventType) {
         this.eventType = eventType;
     }
 
@@ -65,16 +57,6 @@ public class EventDTO {
     public void setLocation(String location) {
         this.location = location;
     }
-
-    public Priority getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
-
-
 
     public LocalDateTime getTime() {
         return time;
@@ -90,7 +72,6 @@ public class EventDTO {
                 "🔖  Compromisso: " + eventName + "\n" +
                 "📂  Tipo: " + eventType + "\n" +
                 "📍  Localização: " + location + "\n" +
-                "⚠️  Prioridade: " + priority + "\n" +
                 "🕒  Horário: " + time.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "\n";
     }
 

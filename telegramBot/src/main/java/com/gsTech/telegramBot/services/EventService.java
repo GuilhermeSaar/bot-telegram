@@ -43,7 +43,6 @@ public class EventService {
         event.setEventName(eventDTO.getEventName());
         event.setEventType(eventDTO.getEventType());
         event.setLocation(eventDTO.getLocation());
-        event.setPriority(eventDTO.getPriority());
         event.setTime(eventDTO.getTime());
 
         event = eventRepository.save(event);
