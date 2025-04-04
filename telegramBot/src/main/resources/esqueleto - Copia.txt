@@ -1,0 +1,23 @@
+telegramagenda/
+                    ├── controller/
+                    │   └── TelegramWebhookController.java
+                    │
+                    ├── handler/
+                    │   ├── CommandHandler.java
+                    │   ├── NovoEventoHandler.java
+                    │   ├── CancelarHandler.java
+                    │   └── MensagemTextoHandler.java
+                    │
+                    ├── model/
+                    │   └── Evento.java
+                    │
+                    ├── service/
+                    │   ├── AgendaService.java
+                    │   ├── StateService.java
+                    │   └── CommandDispatcher.java
+                    │
+                    ├── state/
+                    │   └── ChatState.java
+                    │
+                    └── util/
+                        └── TelegramMessageUtils.java
