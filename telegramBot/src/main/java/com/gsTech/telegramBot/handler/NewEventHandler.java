@@ -42,5 +42,4 @@ public class NewEventHandler implements CommandHandler {
         userEvent.setUserEvent(chatId);
         telegramApiService.sendMessage(chatId, "Novo compromisso!\n\nNome do compromisso:");
     }
-
 }
