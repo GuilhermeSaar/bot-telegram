@@ -21,7 +21,7 @@ public class CommandDispatcher {
 
         for (CommandHandler handler : handlers) {
 
-            if (handler.canHandle(update)) {
+            if (handler.canHandle(update)) { //ex: se canHandle for verdadeiro vai chamar/retornar o metodo handle
                 handler.handle(update);
                 return;
             }

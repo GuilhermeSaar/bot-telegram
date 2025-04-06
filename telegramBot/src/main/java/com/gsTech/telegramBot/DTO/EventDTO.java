@@ -12,7 +12,7 @@ public class EventDTO {
     private String eventType;
     private String location;
     private LocalDateTime time;
-    private Long UserId;
+    private Long chatId;
 
     public EventDTO() {
     }
@@ -23,10 +23,11 @@ public class EventDTO {
         eventType = event.getEventType();
         location = event.getLocation();
         time = event.getTime();
+        chatId = event.getUser().getChatId();
     }
 
     public Long getUserId() {
-        return UserId;
+        return chatId;
     }
 
     public Long getId() {

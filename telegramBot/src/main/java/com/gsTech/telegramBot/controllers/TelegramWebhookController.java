@@ -2,7 +2,6 @@ package com.gsTech.telegramBot.controllers;
 
 import com.gsTech.telegramBot.DTO.telegram.TelegramUpdate;
 import com.gsTech.telegramBot.services.CommandDispatcher;
-import com.gsTech.telegramBot.services.EventService;
 import com.gsTech.telegramBot.services.TelegramApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/webhook")
 public class TelegramWebhookController {
 
-    @Autowired
-    private EventService eventService;
 
     @Value("${telegram.webhook.url}")
     private String urlNgrok;
@@ -24,8 +21,6 @@ public class TelegramWebhookController {
 
     @Autowired
     private CommandDispatcher dispatcher;
-
-
 
 
     @PostMapping

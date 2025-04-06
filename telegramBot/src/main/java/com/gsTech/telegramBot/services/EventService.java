@@ -2,6 +2,7 @@ package com.gsTech.telegramBot.services;
 
 import com.gsTech.telegramBot.DTO.EventDTO;
 import com.gsTech.telegramBot.orm.Event;
+import com.gsTech.telegramBot.orm.User;
 import com.gsTech.telegramBot.repositories.EventRepository;
 import com.gsTech.telegramBot.services.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -37,15 +38,25 @@ public class EventService {
     }
 
     @Transactional(readOnly = true)
-    public EventDTO newEvent(EventDTO eventDTO) {
-        Event event = new Event();
+    public EventDTO saveNewEvent(EventDTO DTO, User user) {
 
-        event.setEventName(eventDTO.getEventName());
-        event.setEventType(eventDTO.getEventType());
-        event.setLocation(eventDTO.getLocation());
-        event.setTime(eventDTO.getTime());
-
+        Event event = fromDTO(DTO, user);
         event = eventRepository.save(event);
+
         return new EventDTO(event);
     }
+
+
+    private Event fromDTO(EventDTO dto, User user) {
+
+        Event event = new Event();
+        event.setEventName(dto.getEventName());
+        event.setEventType(dto.getEventType());
+        event.setLocation(dto.getLocation());
+        event.setTime(dto.getTime());
+        event.setUser(user);
+        return event;
+    }
+
+
 }

@@ -3,10 +3,7 @@ package com.gsTech.telegramBot.handler;
 
 import com.gsTech.telegramBot.DTO.EventDTO;
 import com.gsTech.telegramBot.DTO.telegram.TelegramUpdate;
-import com.gsTech.telegramBot.services.EventService;
-import com.gsTech.telegramBot.services.TelegramApiService;
-import com.gsTech.telegramBot.services.UserEventService;
-import com.gsTech.telegramBot.services.UserStateService;
+import com.gsTech.telegramBot.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +22,8 @@ public class ConversationFlowHandler implements CommandHandler {
     private TelegramApiService telegramApiService;
     @Autowired
     private EventService eventService;
+    @Autowired
+    private UserService userService;
 
     private final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -48,15 +47,16 @@ public class ConversationFlowHandler implements CommandHandler {
 
         Long chatId = update.getMessage().getChat().getId();
         String messageText = update.getMessage().getText();
-
-        processState(chatId, messageText);
+        String name = update.getMessage().getFrom().getFirstName();
+        processState(chatId, messageText, name);
     }
 
 
-    private void processState(Long chatId, String messageText) {
+    private void processState(Long chatId, String messageText, String name) {
 
         String state = userState.getUserState(chatId);
         EventDTO event = userEvent.getEvent(chatId);
+
 
         if (state == null || event == null) {
             return;
@@ -85,7 +85,8 @@ public class ConversationFlowHandler implements CommandHandler {
                 try {
                     LocalDateTime date = LocalDateTime.parse(messageText, DATE_TIME_FORMATTER);
                     event.setTime(date);
-                    eventService.newEvent(event);
+                    var user = userService.getOrCreateUserByChatId(chatId, name);
+                    eventService.saveNewEvent(event, user);
                     telegramApiService.sendMessage(chatId, "Compromisso criado:\n" + event);
                     userState.clearUserState(chatId);
                 } catch (DateTimeParseException e) {

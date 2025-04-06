@@ -1,11 +1,16 @@
 package com.gsTech.telegramBot.DTO.telegram;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Message {
     private Long messageId;
+    @JsonProperty("from")
+    private TelegramUser from;
     private Chat chat;
     private String text;
     private Long date;
 
+    @JsonProperty("message_id")
     public Long getMessageId() {
         return messageId;
     }
@@ -37,4 +42,14 @@ public class Message {
     public void setDate(Long date) {
         this.date = date;
     }
+
+    public TelegramUser getFrom() {
+        return from;
+    }
+
+    public void setFrom(TelegramUser from) {
+        this.from = from;
+    }
+
+
 }

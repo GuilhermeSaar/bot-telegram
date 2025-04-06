@@ -1,3 +1,6 @@
+ESTRUTURA DO PROJETO
+
+
 telegramagenda/
                     ├── controller/
                     │   └── TelegramWebhookController.java
@@ -21,3 +24,33 @@ telegramagenda/
                     │
                     └── util/
                         └── TelegramMessageUtils.java
+
+
+
+
+                    Telegram → WebhookController → CommandDispatcher → Handler correto → Resposta enviada!
+
+
+                    FLUXOGRAMA DA CLASSE DISPATCHER
+
+                    [Mensagem do usuário recebida: "/novo"]
+                                |
+                                v
+                    [commandDispatcher.dispatch(update)]
+                                |
+                                v
+                    [Iterar sobre os handlers]
+                                |
+                                v
+                    ┌───────────────────────────────┐
+                    │ Para cada handler na lista:  │
+                    │                               │
+                    │ if handler.canHandle(update) │
+                    │    → se true, chama:         │
+                    │        handler.handle(update)│
+                    │    → se false, vai pro próximo│
+                    └───────────────────────────────┘
+                                |
+                                v
+                    [Handler correto executa a ação]
+                    → Exemplo: enviar "Nome do compromisso?"

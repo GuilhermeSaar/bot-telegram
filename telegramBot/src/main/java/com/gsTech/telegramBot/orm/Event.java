@@ -14,7 +14,6 @@ public class Event {
     private String eventName;
     private String eventType;
     private String location;
-    private String priority;
     private LocalDateTime time;
 
     @ManyToOne
@@ -24,11 +23,10 @@ public class Event {
     public Event() {
     }
 
-    public Event(String eventName, String eventType, String location, String priority, LocalDateTime time, User user) {
+    public Event(String eventName, String eventType, String location, LocalDateTime time, User user) {
         this.eventName = eventName;
         this.eventType = eventType;
         this.location = location;
-        this.priority = priority;
         this.time = time;
         this.user = user;
     }
@@ -59,14 +57,6 @@ public class Event {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public void setPriority(String priority) {
-        this.priority = priority;
     }
 
     public LocalDateTime getTime() {

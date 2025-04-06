@@ -11,18 +11,22 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
+    private Long chatId;
     private String name;
-    private String email;
 
     @OneToMany(mappedBy = "user")
     private Set<Event> events;
 
-    public User(String name, String email) {
+    public User(String name) {
         this.name = name;
-        this.email = email;
     }
 
     public User() {
+    }
+
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
     }
 
     public Long getId() {
@@ -37,16 +41,11 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public Set<Event> getEvents() {
         return events;
     }
 
+    public Long getChatId() {
+        return chatId;
+    }
 }
