@@ -21,6 +21,4 @@ public class UserStateService {
     public void clearUserState(Long chatId) {
         userState.remove(chatId);
     }
-
-
 }

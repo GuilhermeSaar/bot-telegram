@@ -25,5 +25,4 @@ public class EventController {
         EventDTO eventDTO = eventService.findByEventId(id);
         return ResponseEntity.ok().body(eventDTO);
     }
-
 }

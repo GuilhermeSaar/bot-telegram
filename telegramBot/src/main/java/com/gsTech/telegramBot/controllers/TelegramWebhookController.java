@@ -1,5 +1,7 @@
 package com.gsTech.telegramBot.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gsTech.telegramBot.DTO.telegram.TelegramUpdate;
 import com.gsTech.telegramBot.services.CommandDispatcher;
 import com.gsTech.telegramBot.services.TelegramApiService;
@@ -24,12 +26,13 @@ public class TelegramWebhookController {
 
 
     @PostMapping
-    public ResponseEntity<String> handleUpdate(@RequestBody TelegramUpdate update) {
+    public ResponseEntity<String> handleUpdate(@RequestBody TelegramUpdate update) throws JsonProcessingException {
+
+        //System.out.println("Recebi update: " + new ObjectMapper().writeValueAsString(update));
         dispatcher.dispatch(update);
 
         return ResponseEntity.ok().body("Success");
     }
-
 
     @GetMapping("/setWebhook")
     public String setWebhook() {
@@ -37,5 +40,4 @@ public class TelegramWebhookController {
         telegramApiService.setWebhook(webhookUrl);
         return "Webhook configurado.";
     }
-
 }

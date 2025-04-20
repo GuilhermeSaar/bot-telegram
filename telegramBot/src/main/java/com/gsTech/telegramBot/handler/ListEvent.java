@@ -19,7 +19,6 @@ public class ListEvent implements CommandHandler {
     private TelegramApiService telegramApiService;
 
 
-
     @Override
     public boolean canHandle(TelegramUpdate update) {
 
@@ -33,7 +32,7 @@ public class ListEvent implements CommandHandler {
 
         Long chatId = update.getMessage().getChat().getId();
 
-        List<EventDTO> events = eventService.findAll();
+        List<EventDTO> events = eventService.findAllByChatId(chatId);
 
         for(EventDTO event : events) {
             telegramApiService.sendMessage(chatId, event.toString());

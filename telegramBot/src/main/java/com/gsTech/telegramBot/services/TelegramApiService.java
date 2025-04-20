@@ -31,7 +31,6 @@ public class TelegramApiService {
         }
     }
 
-
     public void sendMessage(Long chatId, String text) {
 
         String url = String.format(SEND_MESSAGE_URL, this.token, chatId, text);

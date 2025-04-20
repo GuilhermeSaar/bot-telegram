@@ -11,7 +11,6 @@ public class CommandDispatcher {
 
     private final List<CommandHandler> handlers;
 
-
     public CommandDispatcher(List<CommandHandler> handlers) {
         this.handlers = handlers;
     }

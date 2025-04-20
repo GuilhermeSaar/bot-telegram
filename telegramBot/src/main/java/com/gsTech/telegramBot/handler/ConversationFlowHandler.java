@@ -24,6 +24,8 @@ public class ConversationFlowHandler implements CommandHandler {
     private EventService eventService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private DateParseService dateParseService;
 
     private final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -78,23 +80,34 @@ public class ConversationFlowHandler implements CommandHandler {
             case "WAITING_FOR_LOCATION":
                 event.setLocation(messageText);
                 userState.setUserState(chatId, "WAITING_FOR_DATE");
-                telegramApiService.sendMessage(chatId, "Data do compromisso (ex: dd/MM/yyyy HH:mm):");
+                telegramApiService.sendMessage(chatId, "Data do compromisso\n" +
+                        "Exs: " +
+                        "14/09/2025 19:30:\n" +
+                        "segunda às 14:00\n" +
+                        "1 de dezembro às 09:45\n" +
+                        "hoje as 08:30");
                 break;
 
             case "WAITING_FOR_DATE":
                 try {
-                    LocalDateTime date = LocalDateTime.parse(messageText, DATE_TIME_FORMATTER);
+                    String dateRegex = dateParseService.parseDate(messageText);
+                    LocalDateTime date = LocalDateTime.parse(dateRegex, DATE_TIME_FORMATTER);
                     event.setTime(date);
                     var user = userService.getOrCreateUserByChatId(chatId, name);
                     eventService.saveNewEvent(event, user);
                     telegramApiService.sendMessage(chatId, "Compromisso criado:\n" + event);
                     userState.clearUserState(chatId);
                 } catch (DateTimeParseException e) {
-                    telegramApiService.sendMessage(chatId, "Formato inválido! EX: 14/09/2025 19:30");
+                    telegramApiService.sendMessage(chatId, "Formato inválido! " +
+                            "Exs:\n" +
+                            "Tente algo como:\n" +
+                            "14/09/2025 19:30\n" +
+                            "segunda às 14:00\n" +
+                            "1 de dezembro às 09:45\n" +
+                            "hoje as 08:30");
                 }
                 break;
         }
     }
-
 }
 

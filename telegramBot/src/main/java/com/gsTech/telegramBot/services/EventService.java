@@ -4,17 +4,23 @@ import com.gsTech.telegramBot.DTO.EventDTO;
 import com.gsTech.telegramBot.orm.Event;
 import com.gsTech.telegramBot.orm.User;
 import com.gsTech.telegramBot.repositories.EventRepository;
+import com.gsTech.telegramBot.repositories.UserRepository;
 import com.gsTech.telegramBot.services.exceptions.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class EventService {
 
+    @Autowired
     private EventRepository eventRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public EventService(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
@@ -30,14 +36,17 @@ public class EventService {
     }
 
     @Transactional(readOnly = true)
-    public List<EventDTO> findAll() {
+    public List<EventDTO> findAllByChatId(Long chatId) {
 
-        List<Event> events = eventRepository.findAll();
-        return events.stream().map(EventDTO::new).collect(Collectors.toList());
+        User user = userRepository.findByChatId(chatId).orElseThrow(() ->
+                new ResourceNotFoundException("Usuário não encontrado."));
 
+        List<Event> listEvent = eventRepository.findAllByUserId(user.getId());
+
+        return listEvent.stream().map(EventDTO::new).collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public EventDTO saveNewEvent(EventDTO DTO, User user) {
 
         Event event = fromDTO(DTO, user);
@@ -57,6 +66,5 @@ public class EventService {
         event.setUser(user);
         return event;
     }
-
 
 }
