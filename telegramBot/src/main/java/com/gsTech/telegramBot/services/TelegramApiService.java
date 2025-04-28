@@ -1,50 +1,57 @@
 package com.gsTech.telegramBot.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
+import org.telegram.telegrambots.bots.TelegramWebhookBot;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Service
-public class TelegramApiService {
+public class TelegramApiService extends TelegramWebhookBot {
+
 
     @Value("${telegram.token}")
-    private String token;
+    private String botToken;
+    @Value("${telegram.botUserName}")
+    private String botUsername;
+    @Value("${telegram.webhook.url}")
+    private String botPath;
 
-    private static final String TELEGRAM_API_URL = "https://api.telegram.org/bot%s/setWebhook?url=%s";
-    private static final String SEND_MESSAGE_URL = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s";
+
+    @Autowired
+    private CommandDispatcher dispatcher;
 
 
-    public void setWebhook(String webhookUrl) {
-        String url = String.format(TELEGRAM_API_URL, this.token, webhookUrl);
+    @Override
+    public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
 
-        RestTemplate restTemplate = new RestTemplate();
-        try {
-            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-            System.out.println("Resposta da API do telegram" + response.getBody());
-        }catch (Exception e) {
-            System.err.println("Erro ao tentar configurar o webhook: " + e.getMessage());
+        if (update.hasMessage() && update.getMessage().hasText()) {
+
+            return dispatcher.dispatch(update);
         }
+
+        return null;
     }
 
-    public void sendMessage(Long chatId, String text) {
-
-        String url = String.format(SEND_MESSAGE_URL, this.token, chatId, text);
-        RestTemplate restTemplate = new RestTemplate();
-
-        try {
-            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-            System.out.println("Resposta da API do telegram: " + URLDecoder.decode(Objects.requireNonNull(response.getBody()),
-                    StandardCharsets.UTF_8));
-        } catch (Exception e) {
-            System.err.println("Erro ao enviar mensagem: " + e.getMessage());
-        }
+    @Override
+    public String getBotToken() {
+        return botToken;
     }
 
+    @Override
+    public String getBotPath() {
+        return botPath;
+    }
 
+    @Override
+    public String getBotUsername() {
+        return botUsername;
+    }
+
+    @Override
+    public void onRegister() {
+        super.onRegister();
+    }
 }
 

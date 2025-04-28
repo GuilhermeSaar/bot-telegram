@@ -1,9 +1,10 @@
 package com.gsTech.telegramBot.handler;
 
-import com.gsTech.telegramBot.DTO.telegram.TelegramUpdate;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 public interface CommandHandler {
 
-    boolean canHandle(TelegramUpdate update);
-    void handle(TelegramUpdate update);
+    boolean canHandle(Update update);
+    BotApiMethod<?> handle(Update update);
 }

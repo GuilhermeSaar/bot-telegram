@@ -1,11 +1,14 @@
-package com.gsTech.telegramBot.handler;
+package com.gsTech.telegramBot.handler.newEvent;
 
-import com.gsTech.telegramBot.DTO.telegram.TelegramUpdate;
-import com.gsTech.telegramBot.services.TelegramApiService;
+import com.gsTech.telegramBot.handler.CommandHandler;
 import com.gsTech.telegramBot.services.UserEventService;
 import com.gsTech.telegramBot.services.UserStateService;
+import com.gsTech.telegramBot.utils.SendMessageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 
 @Component
@@ -16,11 +19,11 @@ public class NewEventHandler implements CommandHandler {
     @Autowired
     private UserEventService userEvent;
     @Autowired
-    private TelegramApiService telegramApiService;
+    private SendMessageFactory sendMessage;
 
 
     @Override
-    public boolean canHandle(TelegramUpdate update) {
+    public boolean canHandle(Update update) {
         if(update.getMessage() == null || update.getMessage().getText() == null) {
             return false;
         }
@@ -29,17 +32,17 @@ public class NewEventHandler implements CommandHandler {
     }
 
     @Override
-    public void handle(TelegramUpdate update) {
+    public BotApiMethod<?> handle(Update update) {
 
         Long chatId = update.getMessage().getChat().getId();
-        startNewEvent(chatId);
+        return startNewEvent(chatId);
 
     }
 
-    private void startNewEvent(Long chatId) {
+    private SendMessage startNewEvent(Long chatId) {
 
         userState.setUserState(chatId, "WAITING_FOR_NAME");
         userEvent.setUserEvent(chatId);
-        telegramApiService.sendMessage(chatId, "Novo compromisso!\n\nNome do compromisso:");
+        return sendMessage.sendMessage(chatId, "Novo compromisso!\n\nNome do compromisso:");
     }
 }

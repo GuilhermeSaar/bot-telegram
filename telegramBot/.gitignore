@@ -33,5 +33,6 @@ build/
 .vscode/
 
 ### Ignora arquivo de configuraçao de tests
+application-prod.properties
 application-test.properties
 
