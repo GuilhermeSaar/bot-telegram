@@ -26,12 +26,7 @@ public class TelegramApiService extends TelegramWebhookBot {
     @Override
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
 
-        if (update.hasMessage() && update.getMessage().hasText()) {
-
-            return dispatcher.dispatch(update);
-        }
-
-        return null;
+        return dispatcher.dispatch(update);
     }
 
     @Override

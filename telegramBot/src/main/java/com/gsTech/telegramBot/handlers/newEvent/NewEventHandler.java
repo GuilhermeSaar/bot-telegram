@@ -1,6 +1,6 @@
-package com.gsTech.telegramBot.handler.newEvent;
+package com.gsTech.telegramBot.handlers.newEvent;
 
-import com.gsTech.telegramBot.handler.CommandHandler;
+import com.gsTech.telegramBot.handlers.CommandHandler;
 import com.gsTech.telegramBot.services.UserEventService;
 import com.gsTech.telegramBot.services.UserStateService;
 import com.gsTech.telegramBot.utils.SendMessageFactory;
