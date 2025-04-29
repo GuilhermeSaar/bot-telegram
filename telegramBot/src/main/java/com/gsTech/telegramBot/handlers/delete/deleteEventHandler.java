@@ -4,6 +4,7 @@ import com.gsTech.telegramBot.DTO.EventDTO;
 import com.gsTech.telegramBot.handlers.CommandHandler;
 import com.gsTech.telegramBot.services.EventService;
 import com.gsTech.telegramBot.utils.SendMessageFactory;
+import com.gsTech.telegramBot.utils.enums.CallbackAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -22,9 +23,9 @@ public class deleteEventHandler implements CommandHandler {
 
     @Override
     public boolean canHandle(Update update) {
-
         return update.hasCallbackQuery()
-                && update.getCallbackQuery().getData().startsWith("DELETE_EVENT:");
+                && update.getCallbackQuery().getData().startsWith(CallbackAction.DELETE_EVENT.name() + ":");
+
     }
 
     @Override
@@ -35,6 +36,10 @@ public class deleteEventHandler implements CommandHandler {
         Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
 
         try {
+            String[] parts = callBackData.split(":");
+            if(parts.length < 2) {
+                return sendMessage.sendMessage(chatId, "Erro ao excluir: dados incompletos");
+            }
 
             Long eventId = Long.parseLong(callBackData.split(":")[1]);
             eventService.delete(eventId);
@@ -47,7 +52,7 @@ public class deleteEventHandler implements CommandHandler {
                 EditMessageText noEventsMsg = new EditMessageText();
                 noEventsMsg.setChatId(chatId.toString());
                 noEventsMsg.setMessageId(messageId);
-                noEventsMsg.setText("✅ Compromisso excluído.\n\n📭 Nenhum outro compromisso encontrado.");
+                noEventsMsg.setText("Compromisso excluído.\n\n Nenhum outro compromisso encontrado.");
                 return noEventsMsg;
 
             }

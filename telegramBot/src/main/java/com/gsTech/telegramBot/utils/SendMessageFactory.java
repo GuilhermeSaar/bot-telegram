@@ -1,6 +1,7 @@
 package com.gsTech.telegramBot.utils;
 
 import com.gsTech.telegramBot.DTO.EventDTO;
+import com.gsTech.telegramBot.utils.enums.CallbackAction;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -30,19 +31,19 @@ public class SendMessageFactory {
 
         // criar botoes
         InlineKeyboardButton button1 = new InlineKeyboardButton("Novo compromisso");
-        button1.setCallbackData("NEW_EVENT");
+        button1.setCallbackData(CallbackAction.NEW_EVENT.name());
 
         InlineKeyboardButton button2 = new InlineKeyboardButton("Listar compromissos");
-        button2.setCallbackData("LIST_EVENTS");
+        button2.setCallbackData(CallbackAction.LIST_EVENTS.name());
 
         InlineKeyboardButton button3 = new InlineKeyboardButton("Editar");
-        button3.setCallbackData("EDIT");
+        button3.setCallbackData(CallbackAction.EDIT.name());
 
         InlineKeyboardButton button4 = new InlineKeyboardButton("Excluir compromisso");
-        button4.setCallbackData("DELETE");
+        button4.setCallbackData(CallbackAction.DELETE.name());
 
         InlineKeyboardButton button5 = new InlineKeyboardButton("Cancelar");
-        button5.setCallbackData("CANCEL");
+        button5.setCallbackData(CallbackAction.CANCEL.name());
 
         var row1 = List.of(button1);
         var row2 = List.of(button2);
@@ -70,7 +71,7 @@ public class SendMessageFactory {
         for (EventDTO event : events) {
 
             var deleteButton = new InlineKeyboardButton(" " + event.getEventName() + " ❌");
-            deleteButton.setCallbackData("DELETE_EVENT:" + event.getId());
+            deleteButton.setCallbackData(CallbackAction.DELETE_EVENT.name() + ":" + event.getId());
 
             rows.add(List.of(deleteButton));
         }
@@ -95,7 +96,7 @@ public class SendMessageFactory {
         for (EventDTO event : events) {
 
             var deleteButton = new InlineKeyboardButton(" " + event.getEventName() + " ❌");
-            deleteButton.setCallbackData("DELETE_EVENT:" + event.getId());
+            deleteButton.setCallbackData(CallbackAction.DELETE_EVENT.name() + event.getId());
 
             rows.add(List.of(deleteButton));
         }
@@ -111,7 +112,6 @@ public class SendMessageFactory {
         message.setParseMode("HTML"); // Opcional, se usar formatação no texto
 
         return message;
-
     }
 
 }

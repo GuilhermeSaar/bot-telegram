@@ -4,6 +4,7 @@ import com.gsTech.telegramBot.DTO.EventDTO;
 import com.gsTech.telegramBot.handlers.CommandHandler;
 import com.gsTech.telegramBot.services.EventService;
 import com.gsTech.telegramBot.utils.SendMessageFactory;
+import com.gsTech.telegramBot.utils.enums.CallbackAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -25,7 +26,7 @@ public class DeleteMenuHadler implements CommandHandler {
     @Override
     public boolean canHandle(Update update) {
         return update.hasCallbackQuery()
-                && "DELETE".equals(update.getCallbackQuery().getData());
+                && CallbackAction.DELETE.name().equals(update.getCallbackQuery().getData());
     }
 
     @Override

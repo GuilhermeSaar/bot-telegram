@@ -5,6 +5,7 @@ import com.gsTech.telegramBot.DTO.EventDTO;
 import com.gsTech.telegramBot.handlers.CommandHandler;
 import com.gsTech.telegramBot.services.EventService;
 import com.gsTech.telegramBot.utils.SendMessageFactory;
+import com.gsTech.telegramBot.utils.enums.CallbackAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
@@ -27,7 +28,7 @@ public class ListEventHandler implements CommandHandler {
     @Override
     public boolean canHandle(Update update) {
         return update.hasCallbackQuery()
-                && "LIST_EVENTS".equals(update.getCallbackQuery().getData());
+                && CallbackAction.LIST_EVENTS.name().equals(update.getCallbackQuery().getData());
     }
 
     @Override
