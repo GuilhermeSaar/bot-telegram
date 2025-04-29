@@ -96,7 +96,7 @@ public class ConversationFlowHandler implements CommandHandler {
                     event.setTime(date);
 
                     var user = userService.getOrCreateUserByChatId(chatId, name);
-                    eventService.saveNewEvent(event, user);
+                    eventService.newEvent(event, user);
 
                     userState.clearUserState(chatId);
                     return sendMessage.sendMessage(chatId, "Compromisso criado:\n" + event);

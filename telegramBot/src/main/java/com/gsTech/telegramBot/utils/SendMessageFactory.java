@@ -1,10 +1,13 @@
 package com.gsTech.telegramBot.utils;
 
+import com.gsTech.telegramBot.DTO.EventDTO;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -55,6 +58,60 @@ public class SendMessageFactory {
         message.setReplyMarkup(markup);
 
         return message;
+    }
+
+
+    public SendMessage sendMessageEventDelete(Long chatId, List<EventDTO> events) {
+
+        String header = "Escolha um compromisso para excluir:\n\n";
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+
+
+        for (EventDTO event : events) {
+
+            var deleteButton = new InlineKeyboardButton(" " + event.getEventName() + " ❌");
+            deleteButton.setCallbackData("DELETE_EVENT:" + event.getId());
+
+            rows.add(List.of(deleteButton));
+        }
+
+        var markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(rows);
+
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId.toString());
+        message.setText(header);
+        message.setReplyMarkup(markup);
+
+        return message;
+    }
+
+
+    public EditMessageText editMessageEventList(Long chatId, Integer messageId, List<EventDTO> events) {
+
+        String header = "Escolha um compromisso para excluir:\n\n";
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+
+        for (EventDTO event : events) {
+
+            var deleteButton = new InlineKeyboardButton(" " + event.getEventName() + " ❌");
+            deleteButton.setCallbackData("DELETE_EVENT:" + event.getId());
+
+            rows.add(List.of(deleteButton));
+        }
+
+        var markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(rows);
+
+        EditMessageText message = new EditMessageText();
+        message.setChatId(chatId.toString());
+        message.setMessageId(messageId);
+        message.setText(header);
+        message.setReplyMarkup(markup);
+        message.setParseMode("HTML"); // Opcional, se usar formatação no texto
+
+        return message;
+
     }
 
 }

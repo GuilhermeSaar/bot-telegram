@@ -47,12 +47,21 @@ public class EventService {
     }
 
     @Transactional
-    public EventDTO saveNewEvent(EventDTO DTO, User user) {
+    public EventDTO newEvent(EventDTO DTO, User user) {
 
         Event event = fromDTO(DTO, user);
         event = eventRepository.save(event);
 
         return new EventDTO(event);
+    }
+
+    public void delete(Long id) {
+
+        Event event = eventRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Event not found")
+        );
+        eventRepository.delete(event);
+
     }
 
 
