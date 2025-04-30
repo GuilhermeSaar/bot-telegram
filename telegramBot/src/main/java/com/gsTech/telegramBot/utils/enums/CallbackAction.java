@@ -7,5 +7,6 @@ public enum CallbackAction {
     EDIT,
     DELETE,
     DELETE_EVENT,
+    EDIT_EVENT,
     CANCEL
 }

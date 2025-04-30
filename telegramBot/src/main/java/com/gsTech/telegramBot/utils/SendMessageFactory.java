@@ -88,14 +88,62 @@ public class SendMessageFactory {
     }
 
 
+    public SendMessage sendMessageEventEdit(Long chatId, List<EventDTO> events) {
+
+        String header = "Escolha um compromisso para editar:\n\n";
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+
+
+        for (EventDTO event : events) {
+
+            var deleteButton = new InlineKeyboardButton(" " + event.getEventName() + " ");
+            deleteButton.setCallbackData(CallbackAction.EDIT_EVENT.name() + ":" + event.getId());
+
+            rows.add(List.of(deleteButton));
+        }
+
+        var markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(rows);
+
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId.toString());
+        message.setText(header);
+        message.setReplyMarkup(markup);
+
+        return message;
+    }
+
+
+    public SendMessage sendMessageEditOptions(Long chatId, EventDTO event) {
+
+        var markup = new InlineKeyboardMarkup();
+
+        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+
+        buttons.add(List.of(buildButton("Editar nome", "EDIT_FIELD:NAME")));
+        buttons.add(List.of(buildButton("Editar tipo", "EDIT_FIELD:TYPE")));
+        buttons.add(List.of(buildButton("Editar local", "EDIT_FIELD:LOCATION")));
+        buttons.add(List.of(buildButton("Editar data", "EDIT_FIELD:DATE")));
+
+        markup.setKeyboard(buttons);
+
+        var message = new SendMessage();
+        message.setChatId(chatId.toString());
+        message.setText("Escolha o que deseja editar para este compromisso:\n" + event);
+        message.setReplyMarkup(markup);
+
+        return message;
+    }
+
+
     public EditMessageText editMessageEventList(Long chatId, Integer messageId, List<EventDTO> events) {
 
-        String header = "Escolha um compromisso para excluir:\n\n";
+        String header = "Escolha um compromisso para editar:\n\n";
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
 
         for (EventDTO event : events) {
 
-            var deleteButton = new InlineKeyboardButton(" " + event.getEventName() + " ❌");
+            var deleteButton = new InlineKeyboardButton(" " + event.getEventName());
             deleteButton.setCallbackData(CallbackAction.DELETE_EVENT.name() + event.getId());
 
             rows.add(List.of(deleteButton));
@@ -113,5 +161,15 @@ public class SendMessageFactory {
 
         return message;
     }
+
+    private InlineKeyboardButton buildButton(String text, String callBackData) {
+
+        var button = new InlineKeyboardButton();
+        button.setText(text);
+        button.setCallbackData(callBackData);
+        return button;
+
+    }
+
 
 }

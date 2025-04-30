@@ -65,6 +65,21 @@ public class EventService {
     }
 
 
+    public void update(EventDTO dto) {
+
+        Event event = eventRepository.findById(dto.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("Evento nao encontrado")
+        );
+
+        event.setEventName(dto.getEventName());
+        event.setEventType(dto.getEventType());
+        event.setLocation(dto.getLocation());
+        event.setTime(dto.getTime());
+
+        eventRepository.save(event);
+    }
+
+
     private Event fromDTO(EventDTO dto, User user) {
 
         Event event = new Event();

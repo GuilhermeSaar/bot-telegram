@@ -15,6 +15,10 @@ public class UserEventService {
         userEvent.put(chatId, new EventDTO());
     }
 
+    public void setUserEvent(Long chatId, EventDTO event) {
+        userEvent.put(chatId, event);
+    }
+
     public String getEventName(Long chatId) {
         return userEvent.get(chatId).getEventName();
     }

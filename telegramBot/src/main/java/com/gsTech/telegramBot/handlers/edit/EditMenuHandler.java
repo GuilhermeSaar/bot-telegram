@@ -1,4 +1,4 @@
-package com.gsTech.telegramBot.handlers.delete;
+package com.gsTech.telegramBot.handlers.edit;
 
 import com.gsTech.telegramBot.DTO.EventDTO;
 import com.gsTech.telegramBot.handlers.CommandHandler;
@@ -6,26 +6,25 @@ import com.gsTech.telegramBot.services.EventService;
 import com.gsTech.telegramBot.utils.SendMessageFactory;
 import com.gsTech.telegramBot.utils.enums.CallbackAction;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
 
-@Service
-public class DeleteMenuHadler implements CommandHandler {
-
+@Component
+public class EditMenuHandler implements CommandHandler {
 
     @Autowired
     private EventService eventService;
     @Autowired
-    private SendMessageFactory sendMessage;
+    private SendMessageFactory sendMessageFactory;
 
 
     @Override
     public boolean canHandle(Update update) {
         return update.hasCallbackQuery()
-                && CallbackAction.DELETE.name().equals(update.getCallbackQuery().getData());
+                && CallbackAction.EDIT.name().equals(update.getCallbackQuery().getData());
     }
 
     @Override
@@ -34,10 +33,10 @@ public class DeleteMenuHadler implements CommandHandler {
         List<EventDTO> events = eventService.findAllByChatId(chatId);
 
         if (events.isEmpty()) {
-            return sendMessage.sendMessage(chatId, "📭 Nenhum compromisso para excluir.");
+
+            return sendMessageFactory.sendMessage(chatId, "Nenhum compromisso para editar.");
         }
 
-
-        return sendMessage.sendMessageEventDelete(chatId, events);
+        return sendMessageFactory.sendMessageEventEdit(chatId, events);
     }
 }
