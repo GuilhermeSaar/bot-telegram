@@ -47,12 +47,19 @@ public class EventService {
     }
 
     @Transactional
-    public EventDTO newEvent(EventDTO DTO, User user) {
+    public void newEvent(EventDTO dto, User user) {
 
-        Event event = fromDTO(DTO, user);
-        event = eventRepository.save(event);
+        var event = new Event();
 
-        return new EventDTO(event);
+        event.setEventName(dto.getEventName());
+        event.setEventType(dto.getEventType());
+        event.setLocation(dto.getLocation());
+        event.setTime(dto.getTime());
+        event.setUser(user);
+
+        eventRepository.save(event);
+
+
     }
 
     public void delete(Long id) {
@@ -77,18 +84,6 @@ public class EventService {
         event.setTime(dto.getTime());
 
         eventRepository.save(event);
-    }
-
-
-    private Event fromDTO(EventDTO dto, User user) {
-
-        Event event = new Event();
-        event.setEventName(dto.getEventName());
-        event.setEventType(dto.getEventType());
-        event.setLocation(dto.getLocation());
-        event.setTime(dto.getTime());
-        event.setUser(user);
-        return event;
     }
 
 }

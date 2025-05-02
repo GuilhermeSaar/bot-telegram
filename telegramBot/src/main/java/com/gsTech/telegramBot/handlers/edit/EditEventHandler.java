@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.List;
+
 
 @Component
 public class EditEventHandler implements CommandHandler {
@@ -43,7 +43,7 @@ public class EditEventHandler implements CommandHandler {
         try {
             String[] parts = callBackData.split(":");
             if (parts.length < 2) {
-                return sendMessage.sendMessage(chatId, "Erro ao excluir: dados incompletos");
+                return sendMessage.sendMessage(chatId, "Erro ao editar: dados incompletos");
             }
 
             Long eventId = Long.parseLong(parts[1]);

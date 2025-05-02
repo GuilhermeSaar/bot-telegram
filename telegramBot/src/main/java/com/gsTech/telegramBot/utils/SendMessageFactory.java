@@ -2,6 +2,7 @@ package com.gsTech.telegramBot.utils;
 
 import com.gsTech.telegramBot.DTO.EventDTO;
 import com.gsTech.telegramBot.utils.enums.CallbackAction;
+import com.gsTech.telegramBot.utils.enums.CreateCallbackAction;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -88,7 +89,7 @@ public class SendMessageFactory {
     }
 
 
-    public SendMessage sendMessageEventEdit(Long chatId, List<EventDTO> events) {
+    public SendMessage sendMessageEditEvent(Long chatId, List<EventDTO> events) {
 
         String header = "Escolha um compromisso para editar:\n\n";
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
@@ -96,10 +97,11 @@ public class SendMessageFactory {
 
         for (EventDTO event : events) {
 
-            var deleteButton = new InlineKeyboardButton(" " + event.getEventName() + " ");
-            deleteButton.setCallbackData(CallbackAction.EDIT_EVENT.name() + ":" + event.getId());
+            // cria um botao com o nome do evento
+            var editButton = new InlineKeyboardButton(event.getEventName());
+            editButton.setCallbackData(CallbackAction.EDIT_EVENT.name() + ":" + event.getId());
 
-            rows.add(List.of(deleteButton));
+            rows.add(List.of(editButton));
         }
 
         var markup = new InlineKeyboardMarkup();
@@ -111,6 +113,13 @@ public class SendMessageFactory {
         message.setReplyMarkup(markup);
 
         return message;
+    }
+
+
+    public SendMessage sendMessageCreateEvent(Long chatId) {
+
+        return null;
+
     }
 
 

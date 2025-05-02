@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.List;
 
 @Component
-public class EditMenuHandler implements CommandHandler {
+public class EditInMenuHandler implements CommandHandler {
 
     @Autowired
     private EventService eventService;
@@ -33,10 +33,9 @@ public class EditMenuHandler implements CommandHandler {
         List<EventDTO> events = eventService.findAllByChatId(chatId);
 
         if (events.isEmpty()) {
-
             return sendMessageFactory.sendMessage(chatId, "Nenhum compromisso para editar.");
         }
 
-        return sendMessageFactory.sendMessageEventEdit(chatId, events);
+        return sendMessageFactory.sendMessageEditEvent(chatId, events);
     }
 }

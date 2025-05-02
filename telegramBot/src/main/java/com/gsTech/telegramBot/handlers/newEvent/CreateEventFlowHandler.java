@@ -1,8 +1,8 @@
-
 package com.gsTech.telegramBot.handlers.newEvent;
 
 import com.gsTech.telegramBot.DTO.EventDTO;
 import com.gsTech.telegramBot.handlers.CommandHandler;
+import com.gsTech.telegramBot.orm.User;
 import com.gsTech.telegramBot.services.*;
 import com.gsTech.telegramBot.utils.SendMessageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,36 +16,32 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 @Component
-public class ConversationFlowHandler implements CommandHandler {
+public class CreateEventFlowHandler implements CommandHandler {
 
     @Autowired
     private UserStateService userState;
     @Autowired
     private UserEventService userEvent;
     @Autowired
-    private EventService eventService;
-    @Autowired
-    private UserService userService;
+    private SendMessageFactory sendMessage;
     @Autowired
     private DateParseService dateParseService;
     @Autowired
-    private SendMessageFactory sendMessage;
+    private EventService eventService;
+    @Autowired
+    private UserService userService;
 
     private final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-
 
     @Override
     public boolean canHandle(Update update) {
 
-        if(update.getMessage() == null || update.getMessage().getText() == null) {
-
-            return false;
-        }
+        if (update.getMessage() == null || update.getMessage().getText() == null) return false;
 
         Long chatId = update.getMessage().getChat().getId();
         String state = userState.getUserState(chatId);
+        return state != null && state.startsWith("WAITING_FOR_");
 
-        return state != null;
     }
 
     @Override
@@ -53,35 +49,36 @@ public class ConversationFlowHandler implements CommandHandler {
 
         Long chatId = update.getMessage().getChat().getId();
         String messageText = update.getMessage().getText();
-        String name = update.getMessage().getFrom().getFirstName();
-        return processState(chatId, messageText, name);
+        return processCreateState(chatId, messageText);
     }
 
 
-    private SendMessage processState(Long chatId, String messageText, String name) {
+    private SendMessage processCreateState(Long chatId, String messageText) {
+
 
         String state = userState.getUserState(chatId);
         EventDTO event = userEvent.getEvent(chatId);
-
+        User user = userService.getOrCreateUserByChatId(chatId);
 
         if (state == null || event == null) {
-            return sendMessage.sendMessage(chatId, "Erro interno: estado ou evento não encontrado.");
+            return sendMessage.sendMessage(chatId, "Erro interno");
         }
 
         switch (state) {
+
             case "WAITING_FOR_NAME":
                 event.setEventName(messageText);
                 userState.setUserState(chatId, "WAITING_FOR_TYPE");
                 return sendMessage.sendMessage(chatId, "Tipo de compromisso (Pessoal, Profisional...)");
 
             case "WAITING_FOR_TYPE":
-                event.setEventType(messageText);
                 userState.setUserState(chatId, "WAITING_FOR_LOCATION");
+                event.setEventType(messageText);
                 return sendMessage.sendMessage(chatId, "Local do compromisso:");
 
             case "WAITING_FOR_LOCATION":
-                event.setLocation(messageText);
                 userState.setUserState(chatId, "WAITING_FOR_DATE");
+                event.setLocation(messageText);
                 return sendMessage.sendMessage(chatId, "Data do compromisso\n" +
                         "Exs: " +
                         "14/09/2025 19:30:\n" +
@@ -95,10 +92,9 @@ public class ConversationFlowHandler implements CommandHandler {
                     LocalDateTime date = LocalDateTime.parse(dateRegex, DATE_TIME_FORMATTER);
                     event.setTime(date);
 
-                    var user = userService.getOrCreateUserByChatId(chatId, name);
                     eventService.newEvent(event, user);
-
                     userState.clearUserState(chatId);
+
                     return sendMessage.sendMessage(chatId, "Compromisso criado:\n" + event);
 
                 } catch (DateTimeParseException e) {
@@ -111,7 +107,6 @@ public class ConversationFlowHandler implements CommandHandler {
                             "hoje as 08:30");
                 }
         }
-        return sendMessage.sendMessage(chatId, "Erro interno: estado desconhecido");
+        return sendMessage.sendMessage(chatId, "Compromisso criado com sucesso:\n" + event);
     }
 }
-

@@ -13,13 +13,13 @@ public class UserService {
     private UserRepository userRepository;
 
     @Transactional
-    public User getOrCreateUserByChatId(Long chatId, String name) {
+    public User getOrCreateUserByChatId(Long chatId) {
 
         return userRepository.findByChatId(chatId).orElseGet(
                 () -> {
                     var newUser = new User();
                     newUser.setChatId(chatId);
-                    newUser.setName(name);
+                    newUser.setName("USER TEST");
                     return userRepository.save(newUser);
                 });
     }
