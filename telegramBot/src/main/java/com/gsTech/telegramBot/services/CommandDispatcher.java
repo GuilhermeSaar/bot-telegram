@@ -44,7 +44,7 @@ public class CommandDispatcher {
         }
 
         if (chatId != null) {
-            return sendMessageFactory.sendMessageWithMenu(chatId, "Desculpe, não entendi. Escolha uma opção");
+            return sendMessageFactory.sendMessageWithMenu(chatId, "Menu de interação do gerenciador de tarefas");
         }
 
         return null;

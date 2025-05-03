@@ -26,10 +26,7 @@ public class CreateEventFlowHandler implements CommandHandler {
     private SendMessageFactory sendMessage;
     @Autowired
     private DateParseService dateParseService;
-    @Autowired
-    private EventService eventService;
-    @Autowired
-    private UserService userService;
+
 
     private final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -58,7 +55,6 @@ public class CreateEventFlowHandler implements CommandHandler {
 
         String state = userState.getUserState(chatId);
         EventDTO event = userEvent.getEvent(chatId);
-        User user = userService.getOrCreateUserByChatId(chatId);
 
         if (state == null || event == null) {
             return sendMessage.sendMessage(chatId, "Erro interno");
@@ -69,17 +65,17 @@ public class CreateEventFlowHandler implements CommandHandler {
             case "WAITING_FOR_NAME":
                 event.setEventName(messageText);
                 userState.setUserState(chatId, "WAITING_FOR_TYPE");
-                return sendMessage.sendMessage(chatId, "Tipo de compromisso (Pessoal, Profisional...)");
+                return sendMessage.sendMessage(chatId, "Tipo de tarefa (Pessoal, Profissional...)");
 
             case "WAITING_FOR_TYPE":
                 userState.setUserState(chatId, "WAITING_FOR_LOCATION");
                 event.setEventType(messageText);
-                return sendMessage.sendMessage(chatId, "Local do compromisso:");
+                return sendMessage.sendMessage(chatId, "Local da tarefa: ");
 
             case "WAITING_FOR_LOCATION":
                 userState.setUserState(chatId, "WAITING_FOR_DATE");
                 event.setLocation(messageText);
-                return sendMessage.sendMessage(chatId, "Data do compromisso\n" +
+                return sendMessage.sendMessage(chatId, "Data da tarefa: \n" +
                         "Exs: " +
                         "14/09/2025 19:30:\n" +
                         "segunda às 14:00\n" +
@@ -92,10 +88,7 @@ public class CreateEventFlowHandler implements CommandHandler {
                     LocalDateTime date = LocalDateTime.parse(dateRegex, DATE_TIME_FORMATTER);
                     event.setTime(date);
 
-                    eventService.newEvent(event, user);
-                    userState.clearUserState(chatId);
-
-                    return sendMessage.sendMessage(chatId, "Compromisso criado:\n" + event);
+                    return sendMessage.sendMessageWithBackTAndSave(chatId, event.toString());
 
                 } catch (DateTimeParseException e) {
                     return sendMessage.sendMessage(chatId, "Formato inválido! " +
@@ -107,6 +100,6 @@ public class CreateEventFlowHandler implements CommandHandler {
                             "hoje as 08:30");
                 }
         }
-        return sendMessage.sendMessage(chatId, "Compromisso criado com sucesso:\n" + event);
+        return sendMessage.sendMessage(chatId, "Tarefa criada com sucesso:\n" + event);
     }
 }

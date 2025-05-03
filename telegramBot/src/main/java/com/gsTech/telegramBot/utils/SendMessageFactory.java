@@ -31,19 +31,19 @@ public class SendMessageFactory {
         message.setText(text);
 
         // criar botoes
-        InlineKeyboardButton button1 = new InlineKeyboardButton("Novo compromisso");
+        InlineKeyboardButton button1 = new InlineKeyboardButton("➕ Nova tarefa");
         button1.setCallbackData(CallbackAction.NEW_EVENT.name());
 
-        InlineKeyboardButton button2 = new InlineKeyboardButton("Listar compromissos");
+        InlineKeyboardButton button2 = new InlineKeyboardButton("\uD83D\uDCCB Listar tarefas");
         button2.setCallbackData(CallbackAction.LIST_EVENTS.name());
 
-        InlineKeyboardButton button3 = new InlineKeyboardButton("Editar");
+        InlineKeyboardButton button3 = new InlineKeyboardButton("✏ Editar");
         button3.setCallbackData(CallbackAction.EDIT.name());
 
-        InlineKeyboardButton button4 = new InlineKeyboardButton("Excluir compromisso");
+        InlineKeyboardButton button4 = new InlineKeyboardButton("\uD83D\uDDD1\uFE0F Excluir tarefas");
         button4.setCallbackData(CallbackAction.DELETE.name());
 
-        InlineKeyboardButton button5 = new InlineKeyboardButton("Cancelar");
+        InlineKeyboardButton button5 = new InlineKeyboardButton("❌ Cancelar");
         button5.setCallbackData(CallbackAction.CANCEL.name());
 
         var row1 = List.of(button1);
@@ -56,6 +56,30 @@ public class SendMessageFactory {
 
         var markup = new InlineKeyboardMarkup();
         markup.setKeyboard(rows);
+
+        message.setReplyMarkup(markup);
+
+        return message;
+    }
+
+
+    public SendMessage sendMessageWithBackTAndSave(Long chatId, String text) {
+
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId.toString());
+        message.setText(text);
+
+        var backButton = new InlineKeyboardButton("\uD83D\uDD19 Voltar ao Menu");
+        backButton.setCallbackData(CallbackAction.MENU.name());
+
+        var saveButton = new InlineKeyboardButton("\uD83D\uDCBE Salvar");
+        saveButton.setCallbackData(CallbackAction.SAVE_EVENT.name());
+
+        List<InlineKeyboardButton> row = List.of(backButton, saveButton);
+        List<List<InlineKeyboardButton>> keyboard = List.of(row);
+
+        var markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(keyboard);
 
         message.setReplyMarkup(markup);
 
@@ -97,7 +121,6 @@ public class SendMessageFactory {
 
         for (EventDTO event : events) {
 
-            // cria um botao com o nome do evento
             var editButton = new InlineKeyboardButton(event.getEventName());
             editButton.setCallbackData(CallbackAction.EDIT_EVENT.name() + ":" + event.getId());
 
@@ -114,14 +137,6 @@ public class SendMessageFactory {
 
         return message;
     }
-
-
-    public SendMessage sendMessageCreateEvent(Long chatId) {
-
-        return null;
-
-    }
-
 
     public SendMessage sendMessageEditOptions(Long chatId, EventDTO event) {
 
