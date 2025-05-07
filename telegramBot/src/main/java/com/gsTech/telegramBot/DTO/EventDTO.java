@@ -9,7 +9,6 @@ public class EventDTO {
 
     private Long id;
     private String eventName;
-    private String eventType;
     private String location;
     private LocalDateTime time;
     private Long chatId;
@@ -20,7 +19,6 @@ public class EventDTO {
     public EventDTO(Event event) {
         id = event.getId();
         eventName = event.getEventName();
-        eventType = event.getEventType();
         location = event.getLocation();
         time = event.getTime();
         chatId = event.getUser().getChatId();
@@ -43,14 +41,6 @@ public class EventDTO {
         this.eventName = eventName;
     }
 
-    public String getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(String eventType) {
-        this.eventType = eventType;
-    }
-
     public String getLocation() {
         return location;
     }
@@ -70,10 +60,9 @@ public class EventDTO {
     @Override
     public String toString() {
         return "\n" +
-                "🔖  Compromisso: " + eventName + "\n" +
-                "📂  Tipo: " + eventType + "\n" +
+                "🔖 Compromisso: " + eventName + "\n" +
                 "📍  Localização: " + location + "\n" +
-                "🕒  Horário: " + time.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "\n";
+                "🕒 Horário: " + time.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "\n";
     }
 
 }

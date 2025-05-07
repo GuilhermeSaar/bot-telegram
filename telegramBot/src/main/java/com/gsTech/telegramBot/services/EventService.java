@@ -52,14 +52,11 @@ public class EventService {
         var event = new Event();
 
         event.setEventName(dto.getEventName());
-        event.setEventType(dto.getEventType());
         event.setLocation(dto.getLocation());
         event.setTime(dto.getTime());
         event.setUser(user);
 
         eventRepository.save(event);
-
-
     }
 
     public void delete(Long id) {
@@ -68,7 +65,6 @@ public class EventService {
                 () -> new ResourceNotFoundException("Event not found")
         );
         eventRepository.delete(event);
-
     }
 
 
@@ -79,7 +75,6 @@ public class EventService {
         );
 
         event.setEventName(dto.getEventName());
-        event.setEventType(dto.getEventType());
         event.setLocation(dto.getLocation());
         event.setTime(dto.getTime());
 

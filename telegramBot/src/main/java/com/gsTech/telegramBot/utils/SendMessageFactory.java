@@ -15,6 +15,7 @@ import java.util.List;
 @Component
 public class SendMessageFactory {
 
+
     public SendMessage sendMessage(Long chatId, String text) {
 
         SendMessage message = new SendMessage();
@@ -24,9 +25,44 @@ public class SendMessageFactory {
         return message;
     }
 
+    public EditMessageText editMessageWithMenu(Long chatId, String text, Integer messageId) {
+
+        var message = new EditMessageText();
+        message.setChatId(chatId.toString());
+        message.setMessageId(messageId);
+        message.setText(text);
+
+        // criar botoes
+        InlineKeyboardButton button1 = new InlineKeyboardButton("➕ Nova tarefa");
+        button1.setCallbackData(CallbackAction.NEW_EVENT.name());
+
+        InlineKeyboardButton button2 = new InlineKeyboardButton("\uD83D\uDCCB Listar tarefas");
+        button2.setCallbackData(CallbackAction.LIST_EVENTS.name());
+
+        InlineKeyboardButton button3 = new InlineKeyboardButton("✏ Editar");
+        button3.setCallbackData(CallbackAction.EDIT.name());
+
+        InlineKeyboardButton button4 = new InlineKeyboardButton("\uD83D\uDDD1\uFE0F Excluir tarefa");
+        button4.setCallbackData(CallbackAction.DELETE.name());
+
+        var row1 = List.of(button1);
+        var row2 = List.of(button2);
+        var row3 = List.of(button3);
+        var row4 = List.of(button4);
+
+        List<List<InlineKeyboardButton>> rows = List.of(row1, row2, row3, row4);
+
+        var markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(rows);
+
+        message.setReplyMarkup(markup);
+
+        return message;
+    }
+
     public SendMessage sendMessageWithMenu(Long chatId, String text) {
 
-        SendMessage message = new SendMessage();
+        var message = new SendMessage();
         message.setChatId(chatId.toString());
         message.setText(text);
 
@@ -40,19 +76,15 @@ public class SendMessageFactory {
         InlineKeyboardButton button3 = new InlineKeyboardButton("✏ Editar");
         button3.setCallbackData(CallbackAction.EDIT.name());
 
-        InlineKeyboardButton button4 = new InlineKeyboardButton("\uD83D\uDDD1\uFE0F Excluir tarefas");
+        InlineKeyboardButton button4 = new InlineKeyboardButton("\uD83D\uDDD1\uFE0F Excluir tarefa");
         button4.setCallbackData(CallbackAction.DELETE.name());
-
-        InlineKeyboardButton button5 = new InlineKeyboardButton("❌ Cancelar");
-        button5.setCallbackData(CallbackAction.CANCEL.name());
 
         var row1 = List.of(button1);
         var row2 = List.of(button2);
         var row3 = List.of(button3);
         var row4 = List.of(button4);
-        var row5 = List.of(button5);
 
-        List<List<InlineKeyboardButton>> rows = List.of(row1, row2, row3, row4, row5);
+        List<List<InlineKeyboardButton>> rows = List.of(row1, row2, row3, row4);
 
         var markup = new InlineKeyboardMarkup();
         markup.setKeyboard(rows);
@@ -61,7 +93,6 @@ public class SendMessageFactory {
 
         return message;
     }
-
 
     public SendMessage sendMessageWithBackTAndSave(Long chatId, String text) {
 
@@ -80,6 +111,28 @@ public class SendMessageFactory {
 
         var markup = new InlineKeyboardMarkup();
         markup.setKeyboard(keyboard);
+
+        message.setReplyMarkup(markup);
+
+        return message;
+    }
+
+    public EditMessageText sendMessageReturnBackMenu(Long chatId, String text, Integer messageId) {
+
+        var message = new EditMessageText();
+        message.setChatId(chatId.toString());
+        message.setMessageId(messageId);
+        message.setText(text);
+
+        var backButton = new InlineKeyboardButton("\uD83D\uDD19 Voltar ao Menu");
+        backButton.setCallbackData(CallbackAction.MENU.name());
+
+        var row = List.of(backButton);
+
+        List<List<InlineKeyboardButton>> rows = List.of(row);
+
+        var markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(rows);
 
         message.setReplyMarkup(markup);
 
@@ -194,6 +247,5 @@ public class SendMessageFactory {
         return button;
 
     }
-
 
 }

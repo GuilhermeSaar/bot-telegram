@@ -9,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.logging.Logger;
 
 @Component
 public class CreateEventFlowHandler implements CommandHandler {
@@ -27,6 +30,8 @@ public class CreateEventFlowHandler implements CommandHandler {
     @Autowired
     private DateParseService dateParseService;
 
+    
+
 
     private final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -37,6 +42,9 @@ public class CreateEventFlowHandler implements CommandHandler {
 
         Long chatId = update.getMessage().getChat().getId();
         String state = userState.getUserState(chatId);
+
+        System.out.println("🔍 Verificando estado: " + state + " para chatId: " + chatId);
+
         return state != null && state.startsWith("WAITING_FOR_");
 
     }
@@ -46,11 +54,12 @@ public class CreateEventFlowHandler implements CommandHandler {
 
         Long chatId = update.getMessage().getChat().getId();
         String messageText = update.getMessage().getText();
+
         return processCreateState(chatId, messageText);
     }
 
 
-    private SendMessage processCreateState(Long chatId, String messageText) {
+    private BotApiMethod<?> processCreateState(Long chatId, String messageText) {
 
 
         String state = userState.getUserState(chatId);
@@ -63,13 +72,8 @@ public class CreateEventFlowHandler implements CommandHandler {
         switch (state) {
 
             case "WAITING_FOR_NAME":
-                event.setEventName(messageText);
-                userState.setUserState(chatId, "WAITING_FOR_TYPE");
-                return sendMessage.sendMessage(chatId, "Tipo de tarefa (Pessoal, Profissional...)");
-
-            case "WAITING_FOR_TYPE":
                 userState.setUserState(chatId, "WAITING_FOR_LOCATION");
-                event.setEventType(messageText);
+                event.setEventName(messageText);
                 return sendMessage.sendMessage(chatId, "Local da tarefa: ");
 
             case "WAITING_FOR_LOCATION":

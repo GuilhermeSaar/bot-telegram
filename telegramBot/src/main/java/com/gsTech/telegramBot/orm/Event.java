@@ -12,7 +12,6 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String eventName;
-    private String eventType;
     private String location;
     private LocalDateTime time;
 
@@ -25,7 +24,6 @@ public class Event {
 
     public Event(String eventName, String eventType, String location, LocalDateTime time, User user) {
         this.eventName = eventName;
-        this.eventType = eventType;
         this.location = location;
         this.time = time;
         this.user = user;
@@ -41,14 +39,6 @@ public class Event {
 
     public void setEventName(String eventName) {
         this.eventName = eventName;
-    }
-
-    public String getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(String eventType) {
-        this.eventType = eventType;
     }
 
     public String getLocation() {

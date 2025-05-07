@@ -35,16 +35,19 @@ public class ListEventHandler implements CommandHandler {
     public BotApiMethod<?> handle(Update update) {
 
        Long chatId = update.getCallbackQuery().getMessage().getChatId();
+       Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
+
        List<EventDTO> events = eventService.findAllByChatId(chatId);
 
        if(events.isEmpty()) {
-           return sendMessage.sendMessage(chatId, "Nenhum compromisso encontrado");
+           return sendMessage.sendMessage(chatId, "Nenhuma tarefa encontrada");
        }
 
-       StringBuilder response = new StringBuilder("Seus compromissos\n");
-       events.forEach(event -> response.append("- ").append(event.toString()));
+       StringBuilder response = new StringBuilder("\uD83D\uDCC5 *Seus compromissos:*\n\n");
+       for(EventDTO event : events) {
+           response.append("• ").append(event.toString()).append("\n");
+       }
 
-       return sendMessage.sendMessage(chatId, response.toString());
+       return sendMessage.sendMessageReturnBackMenu(chatId, response.toString(), messageId);
     }
-
 }

@@ -71,9 +71,6 @@ public class EditEventFlowHandler implements CommandHandler {
                 event.setEventName(messageText);
                 break;
 
-            case "EDIT_WAITING_FOR_TYPE":
-                event.setEventType(messageText);
-                break;
 
             case "EDIT_WAITING_FOR_LOCATION":
                 event.setLocation(messageText);

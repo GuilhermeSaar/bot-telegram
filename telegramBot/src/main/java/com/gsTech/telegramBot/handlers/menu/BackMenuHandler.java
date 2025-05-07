@@ -29,7 +29,8 @@ public class BackMenuHandler implements CommandHandler {
     public BotApiMethod<?> handle(Update update) {
 
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
+        Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
         userState.clearUserState(chatId);
-        return sendMessageFactory.sendMessageWithMenu(chatId, "Menu de interação do gerenciador de tarefas");
+        return sendMessageFactory.editMessageWithMenu(chatId, "Menu de interação do gerenciador de tarefas", messageId);
     }
 }
