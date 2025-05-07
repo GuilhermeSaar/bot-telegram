@@ -47,17 +47,7 @@ public class deleteEventHandler implements CommandHandler {
             // lista atualizada
             List<EventDTO> events = eventService.findAllByChatId(chatId);
 
-            if (events.isEmpty()) {
-
-                EditMessageText noEventsMsg = new EditMessageText();
-                noEventsMsg.setChatId(chatId.toString());
-                noEventsMsg.setMessageId(messageId);
-                noEventsMsg.setText("Compromisso excluído.\n\n Nenhum outro compromisso encontrado.");
-                return noEventsMsg;
-
-            }
-
-            return sendMessage.editMessageEventList(chatId, messageId, events);
+            return sendMessage.editEventDelete(chatId,events, messageId);
 
         } catch (NumberFormatException e) {
             return sendMessage.sendMessage(chatId, "Erro ao excluir: ID invalido");

@@ -48,6 +48,6 @@ public class ListEventHandler implements CommandHandler {
            response.append("• ").append(event.toString()).append("\n");
        }
 
-       return sendMessage.sendMessageReturnBackMenu(chatId, response.toString(), messageId);
+       return sendMessage.editMessageReturnBackMenu(chatId, response.toString(), messageId);
     }
 }

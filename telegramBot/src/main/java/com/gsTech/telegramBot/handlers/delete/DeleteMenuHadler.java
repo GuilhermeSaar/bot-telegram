@@ -31,13 +31,13 @@ public class DeleteMenuHadler implements CommandHandler {
     @Override
     public BotApiMethod<?> handle(Update update) {
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
+        Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
         List<EventDTO> events = eventService.findAllByChatId(chatId);
 
         if (events.isEmpty()) {
-            return sendMessage.sendMessage(chatId, "📭 Nenhum compromisso para excluir.");
+            return sendMessage.editMessageBackToMenu(chatId, "📭 Nenhum compromisso para excluir.", messageId);
         }
 
-
-        return sendMessage.sendMessageEventDelete(chatId, events);
+        return sendMessage.editEventDelete(chatId, events, messageId);
     }
 }

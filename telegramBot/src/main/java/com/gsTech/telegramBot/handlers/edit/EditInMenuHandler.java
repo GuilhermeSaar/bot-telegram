@@ -30,12 +30,13 @@ public class EditInMenuHandler implements CommandHandler {
     @Override
     public BotApiMethod<?> handle(Update update) {
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
+        Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
         List<EventDTO> events = eventService.findAllByChatId(chatId);
 
         if (events.isEmpty()) {
             return sendMessageFactory.sendMessage(chatId, "Nenhum compromisso para editar.");
         }
 
-        return sendMessageFactory.sendMessageEditEvent(chatId, events);
+        return sendMessageFactory.editMessageEditEvent(chatId, events, messageId);
     }
 }

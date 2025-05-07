@@ -39,11 +39,12 @@ public class SaveNewEventHandler implements CommandHandler {
     public BotApiMethod<?> handle(Update update) {
 
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
+        Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
         EventDTO event = userEvent.getEvent(chatId);
         User user = userService.getOrCreateUserByChatId(chatId);
         eventService.newEvent(event, user);
         userState.clearUserState(chatId);
 
-        return sendMessage.sendMessage(chatId, "Nova Tarefa Criada");
+        return sendMessage.editMessageReturnBackMenu(chatId, "Nova Tarefa Criada", messageId);
     }
 }

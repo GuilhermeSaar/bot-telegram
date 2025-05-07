@@ -25,6 +25,51 @@ public class SendMessageFactory {
         return message;
     }
 
+    public EditMessageText editMessageBackToMenu(Long chatId, String text, Integer messageId) {
+
+        var message = new EditMessageText();
+        message.setChatId(chatId.toString());
+        message.setMessageId(messageId);
+        message.setText(text);
+
+        var backButton = new InlineKeyboardButton("\uD83D\uDD19 Voltar ao Menu");
+        backButton.setCallbackData(CallbackAction.MENU.name());
+
+        var row = List.of(backButton);
+
+        List<List<InlineKeyboardButton>> rows = List.of(row);
+
+        var markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(rows);
+
+        message.setReplyMarkup(markup);
+
+        return message;
+    }
+
+
+    public SendMessage sendMessageBackToMenu(Long chatId, String text) {
+
+        var message = new SendMessage();
+        message.setChatId(chatId.toString());
+        message.setText(text);
+
+        var backButton = new InlineKeyboardButton("\uD83D\uDD19 Voltar ao Menu");
+        backButton.setCallbackData(CallbackAction.MENU.name());
+
+        var row = List.of(backButton);
+
+        List<List<InlineKeyboardButton>> rows = List.of(row);
+
+        var markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(rows);
+
+        message.setReplyMarkup(markup);
+
+        return message;
+    }
+
+
     public EditMessageText editMessageWithMenu(Long chatId, String text, Integer messageId) {
 
         var message = new EditMessageText();
@@ -117,7 +162,7 @@ public class SendMessageFactory {
         return message;
     }
 
-    public EditMessageText sendMessageReturnBackMenu(Long chatId, String text, Integer messageId) {
+    public EditMessageText editMessageReturnBackMenu(Long chatId, String text, Integer messageId) {
 
         var message = new EditMessageText();
         message.setChatId(chatId.toString());
@@ -140,9 +185,9 @@ public class SendMessageFactory {
     }
 
 
-    public SendMessage sendMessageEventDelete(Long chatId, List<EventDTO> events) {
+    public EditMessageText editEventDelete(Long chatId, List<EventDTO> events, Integer messageId) {
 
-        String header = "Escolha um compromisso para excluir:\n\n";
+        String header = "Selecione a tarefa:\n\n";
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
 
 
@@ -154,11 +199,17 @@ public class SendMessageFactory {
             rows.add(List.of(deleteButton));
         }
 
+        var backButton = new InlineKeyboardButton("\uD83D\uDD19 Voltar ao Menu");
+        backButton.setCallbackData(CallbackAction.MENU.name());
+        var back = List.of(backButton);
+        rows.add(back);
+
         var markup = new InlineKeyboardMarkup();
         markup.setKeyboard(rows);
 
-        SendMessage message = new SendMessage();
+        var message = new EditMessageText();
         message.setChatId(chatId.toString());
+        message.setMessageId(messageId);
         message.setText(header);
         message.setReplyMarkup(markup);
 
@@ -166,7 +217,8 @@ public class SendMessageFactory {
     }
 
 
-    public SendMessage sendMessageEditEvent(Long chatId, List<EventDTO> events) {
+    // 1° editar
+    public EditMessageText editMessageEditEvent(Long chatId, List<EventDTO> events, Integer messageId) {
 
         String header = "Escolha um compromisso para editar:\n\n";
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
@@ -180,33 +232,40 @@ public class SendMessageFactory {
             rows.add(List.of(editButton));
         }
 
+        var backButton = new InlineKeyboardButton("\uD83D\uDD19 Voltar ao Menu");
+        backButton.setCallbackData(CallbackAction.MENU.name());
+        var back = List.of(backButton);
+        rows.add(back);
+
         var markup = new InlineKeyboardMarkup();
         markup.setKeyboard(rows);
 
-        SendMessage message = new SendMessage();
+        var message = new EditMessageText();
         message.setChatId(chatId.toString());
+        message.setMessageId(messageId);
         message.setText(header);
         message.setReplyMarkup(markup);
 
         return message;
     }
 
-    public SendMessage sendMessageEditOptions(Long chatId, EventDTO event) {
+    // 2° menu
+    public EditMessageText editMessageEditOptions(Long chatId, EventDTO event, Integer messageId) {
 
         var markup = new InlineKeyboardMarkup();
 
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
 
         buttons.add(List.of(buildButton("Editar nome", "EDIT_FIELD:NAME")));
-        buttons.add(List.of(buildButton("Editar tipo", "EDIT_FIELD:TYPE")));
         buttons.add(List.of(buildButton("Editar local", "EDIT_FIELD:LOCATION")));
         buttons.add(List.of(buildButton("Editar data", "EDIT_FIELD:DATE")));
 
         markup.setKeyboard(buttons);
 
-        var message = new SendMessage();
+        var message = new EditMessageText();
         message.setChatId(chatId.toString());
-        message.setText("Escolha o que deseja editar para este compromisso:\n" + event);
+        message.setMessageId(messageId);
+        message.setText("Selecione um campo para editar:\n" + event);
         message.setReplyMarkup(markup);
 
         return message;
@@ -234,7 +293,6 @@ public class SendMessageFactory {
         message.setMessageId(messageId);
         message.setText(header);
         message.setReplyMarkup(markup);
-        message.setParseMode("HTML"); // Opcional, se usar formatação no texto
 
         return message;
     }

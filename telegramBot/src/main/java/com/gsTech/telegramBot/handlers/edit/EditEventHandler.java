@@ -39,6 +39,7 @@ public class EditEventHandler implements CommandHandler {
 
         String callBackData = update.getCallbackQuery().getData();
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
+        Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
 
         try {
             String[] parts = callBackData.split(":");
@@ -50,20 +51,20 @@ public class EditEventHandler implements CommandHandler {
             EventDTO event = eventService.findByEventId(eventId);
 
             if (event == null) {
-                return sendMessage.sendMessage(chatId, "Compromisso não encontrado.");
+                return sendMessage.sendMessage(chatId, "Tarefa não encontrada.");
             }
 
             userEvent.setUserEvent(chatId, event);
             userState.setUserState(chatId, "EDIT_SELECT_FIELD");
 
-            return sendMessage.sendMessageEditOptions(chatId, event);
+            return sendMessage.editMessageEditOptions(chatId, event, messageId);
 
 
         } catch (NumberFormatException e) {
-            return sendMessage.sendMessage(chatId, "Erro ao excluir: ID invalido");
+            return sendMessage.sendMessage(chatId, "Erro ao editar: ID invalido");
         }
         catch (Exception e) {
-            return sendMessage.sendMessage(chatId, "Ocorreu um erro ao tentar excluir");
+            return sendMessage.sendMessage(chatId, "Ocorreu um erro ao tentar editar");
 
         }
 

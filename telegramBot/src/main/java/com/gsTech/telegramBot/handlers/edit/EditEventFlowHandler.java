@@ -13,6 +13,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -55,7 +56,7 @@ public class EditEventFlowHandler implements CommandHandler {
         return processEditState(chatId, messageText);
     }
 
-    private SendMessage processEditState(Long chatId, String messageText) {
+    private BotApiMethod<?> processEditState(Long chatId, String messageText) {
 
         String state = userState.getUserState(chatId);
         EventDTO event = userEvent.getEvent(chatId);
@@ -93,7 +94,7 @@ public class EditEventFlowHandler implements CommandHandler {
         eventService.update(event);
         userState.clearUserState(chatId);
 
-        return sendMessage.sendMessage(chatId, "Compromisso atualizado com sucesso:\n" + event);
+        return sendMessage.sendMessageBackToMenu(chatId, event.toString());
 
     }
 }

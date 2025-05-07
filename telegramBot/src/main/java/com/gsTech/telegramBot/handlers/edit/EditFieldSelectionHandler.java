@@ -24,19 +24,18 @@ public class EditFieldSelectionHandler implements CommandHandler {
     }
 
 
-
     @Override
     public BotApiMethod<?> handle(Update update) {
 
         String callbackData = update.getCallbackQuery().getData();
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
+        Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
 
         String fieldToEdit = callbackData.split(":")[1];
 
         String nextState = switch (fieldToEdit) {
 
             case "NAME" -> "EDIT_WAITING_FOR_NAME";
-            case "TYPE" -> "EDIT_WAITING_FOR_TYPE";
             case "LOCATION" -> "EDIT_WAITING_FOR_LOCATION";
             case "DATE" -> "EDIT_WAITING_FOR_DATE";
             default -> null;
@@ -51,9 +50,8 @@ public class EditFieldSelectionHandler implements CommandHandler {
 
         String fieldQuestion = switch (fieldToEdit) {
 
-            case "NAME" -> "Digite o novo nome do compromisso:";
-            case "TYPE" -> "Digite o novo tipo do compromisso:";
-            case "LOCATION" -> "Digite o novo local do compromisso:";
+            case "NAME" -> "Digite o novo nome da tarefa:";
+            case "LOCATION" -> "Digite o novo local da tarefa:";
             case "DATE" -> "Digite a nova data do compromisso:\nEx: 14/09/2025 19:30";
             default -> "Digite o novo valor:";
 
