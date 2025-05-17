@@ -18,6 +18,21 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.logging.Logger;
 
+
+/**
+ * Handler responsável por conduzir o fluxo de criação de uma nova tarefa com base nas mensagens
+ * de texto do usuário, utilizando o estado atual armazenado para determinar a próxima etapa.
+ *
+ * <p>Fluxo esperado:</p>
+ * <ol>
+ *   <li>Nome da tarefa ({@code WAITING_FOR_NAME})</li>
+ *   <li>Descrição da tarefa ({@code WAITING_FOR_DESCRIPTION})</li>
+ *   <li>Data da tarefa ({@code WAITING_FOR_DATE})</li>
+ * </ol>
+ *
+ * <p>Conforme o estado do usuário, a entrada textual é interpretada e armazenada no {@code EventDTO}.
+ * Quando todos os dados são coletados, a tarefa é exibida com opções de salvar ou voltar.</p>
+ */
 @Component
 public class CreateEventFlowHandler implements CommandHandler {
 
@@ -30,11 +45,17 @@ public class CreateEventFlowHandler implements CommandHandler {
     @Autowired
     private DateParseService dateParseService;
 
-    
-
-
     private final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
+
+    /**
+     * Verifica se o handler pode processar a atualização recebida.
+     * Este handler só processa mensagens de texto quando o estado do usuário indica
+     * que ele está no meio do fluxo de criação de tarefa (estado iniciando com {@code "WAITING_FOR_"}).
+     *
+     * @param update Atualização recebida do Telegram.
+     * @return {@code true} se o estado do usuário iniciar com "WAITING_FOR_", senão {@code false}.
+     */
     @Override
     public boolean canHandle(Update update) {
 
@@ -46,9 +67,16 @@ public class CreateEventFlowHandler implements CommandHandler {
         System.out.println("🔍 Verificando estado: " + state + " para chatId: " + chatId);
 
         return state != null && state.startsWith("WAITING_FOR_");
-
     }
 
+
+    /**
+     * Processa a mensagem de texto recebida, delegando ao método {@code processCreateState}
+     * com base no estado atual do usuário.
+     *
+     * @param update Atualização do Telegram com mensagem de texto do usuário.
+     * @return Resposta adequada à etapa atual do fluxo de criação de tarefa.
+     */
     @Override
     public BotApiMethod<?> handle(Update update) {
 
@@ -59,8 +87,22 @@ public class CreateEventFlowHandler implements CommandHandler {
     }
 
 
+    /**
+     * Processa a entrada do usuário conforme seu estado atual no fluxo de criação da tarefa.
+     *
+     * <ul>
+     *   <li>{@code WAITING_FOR_NAME}: Salva o nome da tarefa e solicita a descrição.</li>
+     *   <li>{@code WAITING_FOR_DESCRIPTION}: Salva a descrição e solicita a data.</li>
+     *   <li>{@code WAITING_FOR_DATE}: Tenta interpretar a data, salvar no evento e mostrar resumo com opções.</li>
+     * </ul>
+     *
+     * <p>Se ocorrer erro na leitura da data, retorna mensagem com exemplos válidos.</p>
+     *
+     * @param chatId ID do chat do usuário.
+     * @param messageText Texto enviado pelo usuário.
+     * @return Mensagem para próxima etapa ou resumo da tarefa criada.
+     */
     private BotApiMethod<?> processCreateState(Long chatId, String messageText) {
-
 
         String state = userState.getUserState(chatId);
         EventDTO event = userEvent.getEvent(chatId);
