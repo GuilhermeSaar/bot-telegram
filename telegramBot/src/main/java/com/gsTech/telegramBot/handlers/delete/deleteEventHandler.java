@@ -13,6 +13,13 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
 
+
+/**
+ * Handler responsável por excluir um evento/tarefa a partir de uma callback.
+ *
+ * Verifica se a callback possui ação DELETE_EVENT com ID do evento.
+ * Tenta excluir o evento pelo ID e atualiza a lista de eventos exibida.
+ */
 @Component
 public class deleteEventHandler implements CommandHandler {
 
@@ -21,6 +28,12 @@ public class deleteEventHandler implements CommandHandler {
     @Autowired
     private SendMessageFactory sendMessage;
 
+
+    /**
+     * Verifica se o update recebido pode ser tratado por este handler.
+     * @param update o objeto Update recebido da API do Telegram.
+     * @return true se o update possuir callback com ação DELETE_EVENT, false caso contrário.
+     */
     @Override
     public boolean canHandle(Update update) {
         return update.hasCallbackQuery()
@@ -28,6 +41,12 @@ public class deleteEventHandler implements CommandHandler {
 
     }
 
+
+    /**
+     * Trata o update de exclusão, excluindo o evento correspondente.
+     * @param update o objeto Update recebido da API do Telegram.
+     * @return um BotApiMethod com a lista atualizada de eventos ou mensagem de erro.
+     */
     @Override
     public BotApiMethod<?> handle(Update update) {
 
