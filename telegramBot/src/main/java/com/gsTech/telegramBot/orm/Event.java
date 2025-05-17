@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+
+
 @Entity
 @Table(name = "tb_event")
 public class Event {
@@ -64,5 +66,4 @@ public class Event {
     public void setUser(User user) {
         this.user = user;
     }
-
 }
