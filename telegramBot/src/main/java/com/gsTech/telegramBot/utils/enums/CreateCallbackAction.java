@@ -4,7 +4,7 @@ public enum CreateCallbackAction {
 
     NEW_NAME,
     NEW_TYPE,
-    NEW_LOCATION,
+    NEW_DESCRIPTION,
     NEW_TIME
 
 }

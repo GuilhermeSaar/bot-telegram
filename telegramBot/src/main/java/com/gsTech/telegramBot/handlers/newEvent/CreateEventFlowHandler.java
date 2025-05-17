@@ -72,13 +72,13 @@ public class CreateEventFlowHandler implements CommandHandler {
         switch (state) {
 
             case "WAITING_FOR_NAME":
-                userState.setUserState(chatId, "WAITING_FOR_LOCATION");
+                userState.setUserState(chatId, "WAITING_FOR_DESCRIPTION");
                 event.setEventName(messageText);
-                return sendMessage.sendMessage(chatId, "Local da tarefa: ");
+                return sendMessage.sendMessage(chatId, "Descrição da tarefa: ");
 
-            case "WAITING_FOR_LOCATION":
+            case "WAITING_FOR_DESCRIPTION":
                 userState.setUserState(chatId, "WAITING_FOR_DATE");
-                event.setLocation(messageText);
+                event.setDescription(messageText);
                 return sendMessage.sendMessage(chatId, "Data da tarefa: \n" +
                         "Exs: " +
                         "14/09/2025 19:30:\n" +

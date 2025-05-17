@@ -9,7 +9,7 @@ public class EventDTO {
 
     private Long id;
     private String eventName;
-    private String location;
+    private String description;
     private LocalDateTime time;
     private Long chatId;
 
@@ -19,7 +19,7 @@ public class EventDTO {
     public EventDTO(Event event) {
         id = event.getId();
         eventName = event.getEventName();
-        location = event.getLocation();
+        description = event.getDescription();
         time = event.getTime();
         chatId = event.getUser().getChatId();
     }
@@ -41,12 +41,12 @@ public class EventDTO {
         this.eventName = eventName;
     }
 
-    public String getLocation() {
-        return location;
+    public String getDescription() {
+        return description;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LocalDateTime getTime() {
@@ -61,7 +61,7 @@ public class EventDTO {
     public String toString() {
         return "\n" +
                 "🔖 Compromisso: " + eventName + "\n" +
-                "📍  Localização: " + location + "\n" +
+                "📍  Descrição: " + description + "\n" +
                 "🕒 Horário: " + time.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "\n";
     }
 

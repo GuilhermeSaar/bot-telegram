@@ -29,14 +29,13 @@ public class EditFieldSelectionHandler implements CommandHandler {
 
         String callbackData = update.getCallbackQuery().getData();
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
-        Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
 
         String fieldToEdit = callbackData.split(":")[1];
 
         String nextState = switch (fieldToEdit) {
 
             case "NAME" -> "EDIT_WAITING_FOR_NAME";
-            case "LOCATION" -> "EDIT_WAITING_FOR_LOCATION";
+            case "DESCRIPTION" -> "EDIT_WAITING_FOR_DESCRIPTION";
             case "DATE" -> "EDIT_WAITING_FOR_DATE";
             default -> null;
 
@@ -51,8 +50,8 @@ public class EditFieldSelectionHandler implements CommandHandler {
         String fieldQuestion = switch (fieldToEdit) {
 
             case "NAME" -> "Digite o novo nome da tarefa:";
-            case "LOCATION" -> "Digite o novo local da tarefa:";
-            case "DATE" -> "Digite a nova data do compromisso:\nEx: 14/09/2025 19:30";
+            case "DESCRIPTION" -> "Digite a descrição da tarefa:";
+            case "DATE" -> "Digite a nova data da tarefa:\nEx: 14/09/2025 19:30";
             default -> "Digite o novo valor:";
 
         };

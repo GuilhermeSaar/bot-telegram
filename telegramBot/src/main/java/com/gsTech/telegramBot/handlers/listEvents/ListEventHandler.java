@@ -43,7 +43,7 @@ public class ListEventHandler implements CommandHandler {
            return sendMessage.sendMessage(chatId, "Nenhuma tarefa encontrada");
        }
 
-       StringBuilder response = new StringBuilder("\uD83D\uDCC5 *Seus compromissos:*\n\n");
+       StringBuilder response = new StringBuilder("\uD83D\uDCC5 *Suas tarefas:*\n\n");
        for(EventDTO event : events) {
            response.append("• ").append(event.toString()).append("\n");
        }

@@ -35,7 +35,7 @@ public class DeleteMenuHadler implements CommandHandler {
         List<EventDTO> events = eventService.findAllByChatId(chatId);
 
         if (events.isEmpty()) {
-            return sendMessage.editMessageBackToMenu(chatId, "📭 Nenhum compromisso para excluir.", messageId);
+            return sendMessage.editMessageBackToMenu(chatId, "📭 Nenhuma tarefa para excluir.", messageId);
         }
 
         return sendMessage.editEventDelete(chatId, events, messageId);

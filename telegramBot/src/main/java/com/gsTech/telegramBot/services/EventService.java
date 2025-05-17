@@ -39,7 +39,7 @@ public class EventService {
     public List<EventDTO> findAllByChatId(Long chatId) {
 
         User user = userRepository.findByChatId(chatId).orElseThrow(() ->
-                new ResourceNotFoundException("Usuário não encontrado."));
+                new ResourceNotFoundException("Resource not found"));
 
         List<Event> listEvent = eventRepository.findAllByUserId(user.getId());
 
@@ -52,7 +52,7 @@ public class EventService {
         var event = new Event();
 
         event.setEventName(dto.getEventName());
-        event.setLocation(dto.getLocation());
+        event.setDescription(dto.getDescription());
         event.setTime(dto.getTime());
         event.setUser(user);
 
@@ -71,11 +71,11 @@ public class EventService {
     public void update(EventDTO dto) {
 
         Event event = eventRepository.findById(dto.getId()).orElseThrow(
-                () -> new ResourceNotFoundException("Evento nao encontrado")
+                () -> new ResourceNotFoundException("Event not found")
         );
 
         event.setEventName(dto.getEventName());
-        event.setLocation(dto.getLocation());
+        event.setDescription(dto.getDescription());
         event.setTime(dto.getTime());
 
         eventRepository.save(event);

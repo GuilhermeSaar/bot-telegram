@@ -34,7 +34,7 @@ public class EditInMenuHandler implements CommandHandler {
         List<EventDTO> events = eventService.findAllByChatId(chatId);
 
         if (events.isEmpty()) {
-            return sendMessageFactory.sendMessage(chatId, "Nenhum compromisso para editar.");
+            return sendMessageFactory.sendMessage(chatId, "Nenhuma tarefa para editar.");
         }
 
         return sendMessageFactory.editMessageEditEvent(chatId, events, messageId);

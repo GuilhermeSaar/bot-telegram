@@ -12,7 +12,7 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String eventName;
-    private String location;
+    private String description;
     private LocalDateTime time;
 
     @ManyToOne
@@ -22,9 +22,9 @@ public class Event {
     public Event() {
     }
 
-    public Event(String eventName, String eventType, String location, LocalDateTime time, User user) {
+    public Event(String eventName, String description, LocalDateTime time, User user) {
         this.eventName = eventName;
-        this.location = location;
+        this.description = description;
         this.time = time;
         this.user = user;
     }
@@ -41,12 +41,12 @@ public class Event {
         this.eventName = eventName;
     }
 
-    public String getLocation() {
-        return location;
+    public String getDescription() {
+        return description;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LocalDateTime getTime() {

@@ -44,7 +44,6 @@ public class deleteEventHandler implements CommandHandler {
             Long eventId = Long.parseLong(callBackData.split(":")[1]);
             eventService.delete(eventId);
 
-            // lista atualizada
             List<EventDTO> events = eventService.findAllByChatId(chatId);
 
             return sendMessage.editEventDelete(chatId,events, messageId);

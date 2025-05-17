@@ -41,6 +41,6 @@ public class CreateInMenuHandler implements CommandHandler {
 
         userState.setUserState(chatId, "WAITING_FOR_NAME");
         userEvent.setUserEvent(chatId);
-        return sendMessageFactory.sendMessage(chatId,"Novo compromisso!\nNome do compromisso:");
+        return sendMessageFactory.sendMessage(chatId,"Nova tarefa!\n\nNome da tarefa:");
     }
 }
