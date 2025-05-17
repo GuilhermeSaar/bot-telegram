@@ -16,6 +16,13 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
 
+
+/**
+ * Handler para listar eventos do usuário.
+ *
+ * Esse handler responde a callback queries com a ação {@link CallbackAction#LIST_EVENTS},
+ * buscando todos os eventos associados ao chat do usuário e enviando uma lista formatada.
+ */
 @Component
 public class ListEventHandler implements CommandHandler {
 
@@ -24,13 +31,27 @@ public class ListEventHandler implements CommandHandler {
     @Autowired
     private SendMessageFactory sendMessage;
 
-
+    /**
+     * Verifica se o update recebido contém uma callback query
+     * com a ação de listar eventos.
+     *
+     * @param update Update recebido do Telegram
+     * @return true se o update contém a callback de listar eventos; false caso contrário
+     */
     @Override
     public boolean canHandle(Update update) {
         return update.hasCallbackQuery()
                 && CallbackAction.LIST_EVENTS.name().equals(update.getCallbackQuery().getData());
     }
 
+
+    /**
+     * Processa o update, buscando os eventos do usuário e montando a resposta.
+     * Caso não haja eventos, retorna mensagem informando.
+     *
+     * @param update Update recebido do Telegram
+     * @return BotApiMethod contendo a mensagem com a lista de eventos ou mensagem informando ausência deles
+     */
     @Override
     public BotApiMethod<?> handle(Update update) {
 
