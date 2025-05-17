@@ -18,6 +18,15 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+
+/**
+ * Handler responsável pelo fluxo de edição de um evento/tarefa.
+ *
+ * Processa as mensagens do usuário quando ele está no estado de edição,
+ * atualizando o evento conforme o campo que está sendo editado (nome, descrição, data).
+ *
+ * Valida o formato da data e atualiza o evento via EventService.
+ */
 @Component
 public class EditEventFlowHandler implements CommandHandler {
 
@@ -32,10 +41,16 @@ public class EditEventFlowHandler implements CommandHandler {
     @Autowired
     private SendMessageFactory sendMessage;
 
-
     private final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
 
+    /**
+     * Verifica se o handler pode tratar o update.
+     * Retorna true se a mensagem do usuário está em um estado de edição esperado.
+     *
+     * @param update atualização recebida do Telegram
+     * @return true se pode processar a edição, false caso contrário
+     */
     @Override
     public boolean canHandle(Update update) {
 
@@ -49,6 +64,12 @@ public class EditEventFlowHandler implements CommandHandler {
     }
 
 
+    /**
+     * Processa a mensagem do usuário e atualiza o evento conforme o estado de edição.
+     *
+     * @param update atualização recebida do Telegram
+     * @return resposta do bot ao usuário
+     */
     @Override
     public BotApiMethod<?> handle(Update update) {
         Long chatId = update.getMessage().getChat().getId();
@@ -56,6 +77,14 @@ public class EditEventFlowHandler implements CommandHandler {
         return processEditState(chatId, messageText);
     }
 
+
+    /**
+     * Lógica para atualizar o campo correto do evento conforme o estado do usuário.
+     *
+     * @param chatId id do chat do usuário
+     * @param messageText texto enviado pelo usuário
+     * @return mensagem do bot com confirmação ou erro
+     */
     private BotApiMethod<?> processEditState(Long chatId, String messageText) {
 
         String state = userState.getUserState(chatId);
@@ -95,6 +124,5 @@ public class EditEventFlowHandler implements CommandHandler {
         userState.clearUserState(chatId);
 
         return sendMessage.sendMessageBackToMenu(chatId, event.toString());
-
     }
 }

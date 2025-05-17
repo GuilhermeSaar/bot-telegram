@@ -13,7 +13,13 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 
-
+/**
+ * Handler responsável por iniciar o fluxo de edição de uma tarefa/evento.
+ *
+ * Este handler processa callbacks que começam com "EDIT_EVENT:" seguidos do ID do evento.
+ * Busca o evento pelo ID, define o evento e o estado do usuário para edição,
+ * e envia as opções de campos que podem ser editados.
+ */
 @Component
 public class EditEventHandler implements CommandHandler {
 
@@ -27,6 +33,14 @@ public class EditEventHandler implements CommandHandler {
     private UserEventService userEvent;
 
 
+
+    /**
+     * Verifica se o handler pode tratar o update.
+     * Retorna true se a callback tiver dados iniciando com "EDIT_EVENT:".
+     *
+     * @param update atualização recebida do Telegram
+     * @return true se o handler pode processar o update, false caso contrário
+     */
     @Override
     public boolean canHandle(Update update) {
         return update.hasCallbackQuery()
@@ -34,6 +48,15 @@ public class EditEventHandler implements CommandHandler {
 
     }
 
+
+    /**
+     * Trata o update para iniciar o fluxo de edição da tarefa.
+     * Verifica e extrai o ID do evento, busca o evento e define o estado para seleção do campo a editar.
+     * Retorna mensagem com opções de edição ou mensagens de erro apropriadas.
+     *
+     * @param update atualização recebida do Telegram
+     * @return mensagem do bot com opções para editar ou mensagem de erro
+     */
     @Override
     public BotApiMethod<?> handle(Update update) {
 
