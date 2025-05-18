@@ -12,7 +12,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @RequestMapping(value = "/webhook")
 public class TelegramWebhookController {
 
-
     private final TelegramApiService telegramApiService;
 
     public TelegramWebhookController(TelegramApiService telegramApiService) {

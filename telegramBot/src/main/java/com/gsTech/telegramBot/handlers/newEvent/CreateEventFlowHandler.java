@@ -64,8 +64,6 @@ public class CreateEventFlowHandler implements CommandHandler {
         Long chatId = update.getMessage().getChat().getId();
         String state = userState.getUserState(chatId);
 
-        System.out.println("🔍 Verificando estado: " + state + " para chatId: " + chatId);
-
         return state != null && state.startsWith("WAITING_FOR_");
     }
 

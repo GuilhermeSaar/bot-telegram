@@ -1,6 +1,7 @@
 package com.gsTech.telegramBot.handlers.menu;
 
 import com.gsTech.telegramBot.handlers.CommandHandler;
+import com.gsTech.telegramBot.orm.User;
 import com.gsTech.telegramBot.services.UserStateService;
 import com.gsTech.telegramBot.utils.SendMessageFactory;
 import com.gsTech.telegramBot.utils.enums.CallbackAction;

@@ -35,4 +35,4 @@ build/
 ### Ignora arquivo de configuraçao de tests
 application-prod.properties
 application-test.properties
-
+application-dev.properties

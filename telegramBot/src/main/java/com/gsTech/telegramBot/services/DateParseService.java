@@ -1,6 +1,6 @@
 package com.gsTech.telegramBot.services;
 
-import org.springframework.cglib.core.Local;
+
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -12,17 +12,36 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/**
+ * Serviço responsável por interpretar strings com informações de data e hora em linguagem natural
+ * e converter para um formato padrão: dd/MM/yyyy HH:mm.
+ */
 @Service
 public class DateParseService {
 
+    /**
+     * Analisa uma string de entrada contendo informações de data e/ou hora em português
+     * e converte para uma data no formato "dd/MM/yyyy HH:mm".
+     *
+     * <p>Suporta os seguintes formatos:</p>
+     * <ul>
+     *     <li><b>"hoje às HH:mm"</b></li>
+     *     <li><b>"dd de mês de yyyy HH:mm"</b> ou <b>"dd de mês HH:mm"</b></li>
+     *     <li><b>"segunda às HH:mm", "terça", ..., "domingo"</b></li>
+     *     <li><b>"dd/MM/yyyy HH:mm"</b>, <b>"dd/MM HH:mm"</b> ou apenas <b>"dd/MM/yyyy"</b></li>
+     * </ul>
+     *
+     * @param input Texto com data/hora em linguagem natural.
+     * @return Data formatada ou mensagem de erro caso não reconhecida.
+     */
 
     public String parseDate(String input) {
 
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-
-        // "hoje as HH:mm"
+        // formato: "hoje às HH:mm"
         Pattern todayPattern = Pattern.compile("hoje a?s? (\\d{2}:\\d{2})", Pattern.CASE_INSENSITIVE);
         Matcher todayMatcher = todayPattern.matcher(input);
 
@@ -35,7 +54,7 @@ public class DateParseService {
             return dateTime.format(outputFormatter);
         }
 
-        // "com ou sem o ano"
+        // formato: "25 de maio de 2025 18:00" ou "25 de maio 18:00"
         Pattern datePattern = Pattern.compile("(\\d{1,2}) de (\\w+)(?: de (\\d{4}))? (\\{2}:\\d{2})", Pattern.CASE_INSENSITIVE);
         Matcher dateMatcher = datePattern.matcher(input);
 
@@ -72,9 +91,11 @@ public class DateParseService {
         }
 
 
-        // dia da semana com hora
+        // formato: "terça às 19:00", "sexta", etc.
         Pattern weekDayPattern = Pattern.compile(
-                "(segunda|terça|terca|quarta|quinta|sexta|sábado|sabado|domingo)[ ]*a?s?[ ]*(\\d{2}:\\d{2})",Pattern.CASE_INSENSITIVE);
+                "(segunda|terça|terca|quarta|quinta|sexta|sábado|sabado|domingo)[ ]*(?:às|as)?[ ]*(\\d{2}:\\d{2})",
+                Pattern.CASE_INSENSITIVE
+        );
 
         Matcher weekDayMatcher = weekDayPattern.matcher(input);
 
@@ -104,7 +125,7 @@ public class DateParseService {
             return dateTime.format(outputFormatter);
         }
 
-        // data numerica com ou sem ano e hora
+        // formato: "25/12/2025 18:00", "25/12 18:00", "25/12/2025"
         Pattern numericDatePattern = Pattern.compile(
                 "(\\d{1,2})/(\\d{1,2})(?:/(\\d{4}))?(?:[ ]*(\\d{2}:\\d{2}))?",
                 Pattern.CASE_INSENSITIVE
@@ -129,5 +150,4 @@ public class DateParseService {
 
         return "Data não reconhecida, digite manualmente no formato: dd/MM/yyyy HH:mm";
     }
-
 }

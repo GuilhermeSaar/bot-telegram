@@ -2,6 +2,7 @@ package com.gsTech.telegramBot.services;
 
 import com.gsTech.telegramBot.handlers.CommandHandler;
 import com.gsTech.telegramBot.utils.SendMessageFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -25,6 +26,9 @@ public class CommandDispatcher {
     private final List<CommandHandler> handlers;
     private final SendMessageFactory sendMessageFactory;
 
+    @Autowired
+    private UserService userService;
+
 
     /**
      * Construtor do despachante de comandos.
@@ -45,12 +49,23 @@ public class CommandDispatcher {
      */
     public BotApiMethod<?> dispatch(Update update) {
 
+        Long chatId = null;
+
+        if (update.hasMessage()) {
+            chatId = update.getMessage().getChatId();
+        } else if (update.hasCallbackQuery()) {
+            chatId = update.getCallbackQuery().getMessage().getChatId();
+        }
+
+        if (chatId != null) {
+            userService.getOrCreateUserByChatId(chatId);
+        }
+
         for (CommandHandler handler : handlers) {
             if (handler.canHandle(update)) {
                 return handler.handle(update);
             }
         }
-
         return handleDefault(update);
     }
 
