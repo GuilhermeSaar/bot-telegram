@@ -58,7 +58,7 @@ public class CommandDispatcher {
         }
 
         if (chatId != null) {
-            userService.getOrCreateUserByChatId(chatId);
+            userService.getOrCreateUserByChatId(chatId, update);
         }
 
         for (CommandHandler handler : handlers) {

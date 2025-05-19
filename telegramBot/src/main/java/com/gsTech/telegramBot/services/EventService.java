@@ -27,6 +27,8 @@ public class EventService {
     private EventRepository eventRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
 
     /**
@@ -69,10 +71,13 @@ public class EventService {
      * Cria um novo evento para um usuário.
      *
      * @param dto  dados do evento a serem salvos
-     * @param user usuário ao qual o evento estará associado
+     * @param chatId usuário ao qual o evento estará associado
      */
     @Transactional
-    public void newEvent(EventDTO dto, User user) {
+    public void newEvent(EventDTO dto, Long chatId) {
+
+        User user = userRepository.findByChatId(chatId).orElseThrow(
+                () -> new ResourceNotFoundException("Usuário nao encontrado para o chat: " + chatId));
 
         var event = new Event();
 

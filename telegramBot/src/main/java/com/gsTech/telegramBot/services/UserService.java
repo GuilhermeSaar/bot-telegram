@@ -5,13 +5,10 @@ import com.gsTech.telegramBot.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.telegram.telegrambots.meta.api.objects.Update;
 
 
-/**
- * Serviço responsável pela lógica de negócio relacionada a usuários.
- *
- * Fornece método para obter um usuário pelo chatId, criando-o caso não exista.
- */
+
 @Service
 public class UserService {
 
@@ -19,22 +16,48 @@ public class UserService {
     private UserRepository userRepository;
 
 
-    /**
-     * Obtém um usuário pelo chatId. Caso o usuário não exista, cria um novo usuário com o chatId informado
-     * e um nome padrão.
-     *
-     * @param chatId identificador do chat do usuário
-     * @return o usuário existente ou recém-criado
-     */
     @Transactional
-    public User getOrCreateUserByChatId(Long chatId) {
+    public void getOrCreateUserByChatId(Long chatId, Update update) {
 
-        return userRepository.findByChatId(chatId).orElseGet(
-                () -> {
-                    var newUser = new User();
-                    newUser.setChatId(chatId);
-                    newUser.setName("USER TEST");
-                    return userRepository.save(newUser);
-                });
+        String currentName = extractTelegramName(update);
+
+        userRepository.findByChatId(chatId).ifPresentOrElse(user -> {
+
+            if(!user.getName().equals(currentName)) {
+                user.setName(currentName);
+                userRepository.save(user);
+            }
+        }, () -> {
+            var newUser = new User();
+            newUser.setChatId(chatId);
+            newUser.setName(currentName);
+            userRepository.save(newUser);
+        });
     }
+
+
+    private String extractTelegramName(Update update) {
+
+        if (update.hasMessage()) {
+            var from = update.getMessage().getFrom();
+            return from.getFirstName() + (from.getLastName() != null ? " " + from.getLastName() : "");
+        }
+
+        else if (update.hasCallbackQuery()) {
+            var from = update.getCallbackQuery().getFrom();
+            return from.getFirstName() + (from.getLastName() != null ? " " + from.getLastName() : "");
+        }
+
+        return "Usuário Desconhecido";
+    }
+
+
+
+
+
+
+
+
+
+
 }

@@ -74,8 +74,8 @@ public class SaveNewEventHandler implements CommandHandler {
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
         Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
         EventDTO event = userEvent.getEvent(chatId);
-        User user = userService.getOrCreateUserByChatId(chatId);
-        eventService.newEvent(event, user);
+
+        eventService.newEvent(event, chatId);
         userState.clearUserState(chatId);
 
         return sendMessage.editMessageReturnBackMenu(chatId, "Nova Tarefa Criada", messageId);
