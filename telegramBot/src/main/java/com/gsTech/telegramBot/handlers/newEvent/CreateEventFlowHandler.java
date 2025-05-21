@@ -119,12 +119,14 @@ public class CreateEventFlowHandler implements CommandHandler {
             case "WAITING_FOR_DESCRIPTION":
                 userState.setUserState(chatId, "WAITING_FOR_DATE");
                 event.setDescription(messageText);
-                return sendMessage.sendMessage(chatId, "Data da tarefa: \n" +
-                        "Exs: " +
-                        "14/09/2025 19:30:\n" +
-                        "segunda às 14:00\n" +
-                        "1 de dezembro às 09:45\n" +
-                        "hoje as 08:30");
+                return sendMessage.sendMessage(chatId,
+                        "Qual é a data limite dessa tarefa? 🗓️\n" +
+                                "Vou cuidar disso e te lembrar quando o prazo estiver chegando. 😉\n\n" +
+                                "Você pode digitar algo como:\n" +
+                                "- 14/09/2025 19:30\n" +
+                                "- segunda às 14:00\n" +
+                                "- 1 de dezembro às 09:45\n" +
+                                "- hoje às 08:30");
 
             case "WAITING_FOR_DATE":
                 try {

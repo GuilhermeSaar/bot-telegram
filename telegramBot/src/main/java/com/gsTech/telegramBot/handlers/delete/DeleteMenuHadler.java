@@ -23,7 +23,6 @@ import java.util.List;
 @Service
 public class DeleteMenuHadler implements CommandHandler {
 
-
     @Autowired
     private EventService eventService;
     @Autowired

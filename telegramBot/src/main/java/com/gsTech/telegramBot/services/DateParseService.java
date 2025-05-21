@@ -1,6 +1,7 @@
 package com.gsTech.telegramBot.services;
 
 
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -9,40 +10,59 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 /**
- * Serviço responsável por interpretar strings com informações de data e hora em linguagem natural
- * e converter para um formato padrão: dd/MM/yyyy HH:mm.
+ * Serviço responsável por interpretar strings que representam datas e horários em
+ * formatos variados, convertendo-as para uma string formatada no padrão "dd/MM/yyyy HH:mm".
+ *
+ * <p>Suporta os seguintes formatos de entrada:
+ * <ul>
+ *   <li>"hoje às|as|ás HH:mm" — data do dia atual com hora específica;</li>
+ *   <li>"25 de maio de 2025 18:00" ou "25 de maio 18:00" — data com nome do mês, com ou sem ano;</li>
+ *   <li>"segunda às 19:00", "sexta 18:00" — dia da semana com hora;</li>
+ *   <li>"25/12/2025 18:00", "25/12 18:00", "25/12/2025" — data numérica com ou sem ano e hora.</li>
+ * </ul>
+ *
+ * <p>Quando a entrada não corresponde a nenhum formato válido, retorna mensagem de erro.
+ *
+ * <p>O serviço pode receber um fornecedor de data/hora atual (Supplier&lt;LocalDateTime&gt;) para permitir testes
+ * com datas fixas.
+ *
  */
 @Service
 public class DateParseService {
 
-    /**
-     * Analisa uma string de entrada contendo informações de data e/ou hora em português
-     * e converte para uma data no formato "dd/MM/yyyy HH:mm".
-     *
-     * <p>Suporta os seguintes formatos:</p>
-     * <ul>
-     *     <li><b>"hoje às HH:mm"</b></li>
-     *     <li><b>"dd de mês de yyyy HH:mm"</b> ou <b>"dd de mês HH:mm"</b></li>
-     *     <li><b>"segunda às HH:mm", "terça", ..., "domingo"</b></li>
-     *     <li><b>"dd/MM/yyyy HH:mm"</b>, <b>"dd/MM HH:mm"</b> ou apenas <b>"dd/MM/yyyy"</b></li>
-     * </ul>
-     *
-     * @param input Texto com data/hora em linguagem natural.
-     * @return Data formatada ou mensagem de erro caso não reconhecida.
-     */
+    private final Supplier<LocalDateTime> nowSupplier;
 
+    public DateParseService() {
+        this(LocalDateTime::now);
+    }
+
+    public DateParseService(Supplier<LocalDateTime> nowSupplier) {
+        this.nowSupplier = nowSupplier;
+    }
+
+    /**
+     * Interpreta uma string representando uma data e hora em formatos pré-definidos e retorna
+     * a data/hora formatada no padrão "dd/MM/yyyy HH:mm".
+     *
+     * <p>Se o formato da entrada não for reconhecido, retorna mensagem de erro solicitando
+     * o formato correto.
+     *
+     * @param input string contendo a data/hora a ser interpretada
+     * @return data/hora formatada ou mensagem de erro caso o formato não seja válido
+     */
     public String parseDate(String input) {
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = nowSupplier.get();
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-        // formato: "hoje às HH:mm"
-        Pattern todayPattern = Pattern.compile("hoje a?s? (\\d{2}:\\d{2})", Pattern.CASE_INSENSITIVE);
+        // formato: "hoje às|as|ás HH:mm"
+        Pattern todayPattern = Pattern.compile("hoje\\s*(?:[àaá]s)?\\s*(\\d{1,2}:\\d{2})");
         Matcher todayMatcher = todayPattern.matcher(input);
 
         if(todayMatcher.find()) {
@@ -55,7 +75,7 @@ public class DateParseService {
         }
 
         // formato: "25 de maio de 2025 18:00" ou "25 de maio 18:00"
-        Pattern datePattern = Pattern.compile("(\\d{1,2}) de (\\w+)(?: de (\\d{4}))? (\\{2}:\\d{2})", Pattern.CASE_INSENSITIVE);
+        Pattern datePattern = Pattern.compile("(\\d{1,2}) de (\\w+)(?: de (\\d{4}))? (\\d{2}:\\d{2})", Pattern.CASE_INSENSITIVE);
         Matcher dateMatcher = datePattern.matcher(input);
 
         if(dateMatcher.find()) {
@@ -81,7 +101,11 @@ public class DateParseService {
                     Map.entry("dezembro", 12)
             );
 
-            int month = months.getOrDefault(monthName, now.getMonthValue());
+            Integer month = months.get(monthName);
+            if(month == null) {
+
+                return "Mês inválido, digite a data manualmente! (Ex: dd/MM/yyyy HH:mm)";
+            }
             int year = (yearStr != null) ? Integer.parseInt(yearStr) : now.getYear();
 
             LocalTime parsedTime = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
