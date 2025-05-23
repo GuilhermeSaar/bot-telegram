@@ -72,7 +72,7 @@ public class EditFieldSelectionHandler implements CommandHandler {
 
             case "NAME" -> "Digite o novo nome da tarefa:";
             case "DESCRIPTION" -> "Digite a descrição da tarefa:";
-            case "DATE" -> "Digite a nova data da tarefa:\nEx: 14/09/2025 19:30";
+            case "DATE" -> "Nova data:";
             default -> "Digite o novo valor:";
 
         };

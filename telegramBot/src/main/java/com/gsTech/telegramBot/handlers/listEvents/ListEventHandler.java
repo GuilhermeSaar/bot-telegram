@@ -61,7 +61,7 @@ public class ListEventHandler implements CommandHandler {
        List<EventDTO> events = eventService.findAllByChatId(chatId);
 
        if(events.isEmpty()) {
-           return sendMessage.sendMessage(chatId, "Nenhuma tarefa encontrada");
+           return sendMessage.editMessageText(chatId, messageId,"Nenhuma tarefa encontrada");
        }
 
        StringBuilder response = new StringBuilder("\uD83D\uDCC5 *Suas tarefas:*\n\n");

@@ -10,5 +10,8 @@ public enum CallbackAction {
     EDIT_EVENT,
     MENU,
     SAVE_EVENT,
+    NOTIFY,
+    EDIT_NOTIFY,
+    SET_NOTIFY_TIME,
     CANCEL
 }

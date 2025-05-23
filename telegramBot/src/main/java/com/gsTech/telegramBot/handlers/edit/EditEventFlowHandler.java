@@ -106,6 +106,7 @@ public class EditEventFlowHandler implements CommandHandler {
                 event.setDescription(messageText);
                 break;
 
+
             case "EDIT_WAITING_FOR_DATE":
                 try {
                     String dateRegex = dateParseService.parseDate(messageText);

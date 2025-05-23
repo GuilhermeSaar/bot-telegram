@@ -13,9 +13,9 @@ public class TelegramApiService extends TelegramWebhookBot {
 
     @Value("${telegram.token}")
     private String botToken;
-    //@Value("${telegram.botUserName}")
+    @Value("${telegram.botUserName}")
     private String botUsername;
-    //@Value("${telegram.webhook.url}")
+    @Value("${telegram.webhook.url}")
     private String botPath;
 
 

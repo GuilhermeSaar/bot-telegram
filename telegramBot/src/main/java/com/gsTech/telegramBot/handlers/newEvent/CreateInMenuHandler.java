@@ -60,8 +60,9 @@ public class CreateInMenuHandler implements CommandHandler {
     @Override
     public BotApiMethod<?> handle(Update update) {
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
+        Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
 
-        return startNewEvent(chatId);
+        return startNewEvent(chatId, messageId);
     }
 
 
@@ -71,10 +72,10 @@ public class CreateInMenuHandler implements CommandHandler {
      * @param chatId ID do chat do usuário que iniciou a criação da tarefa.
      * @return Mensagem solicitando o nome da nova tarefa.
      */
-    private SendMessage startNewEvent(Long chatId) {
+    private EditMessageText startNewEvent(Long chatId, Integer messageId) {
 
         userState.setUserState(chatId, "WAITING_FOR_NAME");
         userEvent.setUserEvent(chatId);
-        return sendMessageFactory.sendMessage(chatId,"Nova tarefa!\n\nNome da tarefa:");
+        return sendMessageFactory.editMessageWithReturn(chatId, messageId,"Nova tarefa!\n\nNome da tarefa:");
     }
 }

@@ -123,4 +123,13 @@ public class EventService {
 
         eventRepository.save(event);
     }
+
+    @Transactional
+    public Event getEntityById(Long eventId) {
+
+        return eventRepository.findById(eventId).orElseThrow(() ->
+                new ResourceNotFoundException("Resource not found for ID: " + eventId));
+    }
+
+
 }

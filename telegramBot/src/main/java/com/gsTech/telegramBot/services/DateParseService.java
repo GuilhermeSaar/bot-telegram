@@ -46,6 +46,7 @@ public class DateParseService {
         this.nowSupplier = nowSupplier;
     }
 
+
     /**
      * Interpreta uma string representando uma data e hora em formatos pré-definidos e retorna
      * a data/hora formatada no padrão "dd/MM/yyyy HH:mm".
@@ -62,7 +63,7 @@ public class DateParseService {
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
         // formato: "hoje às|as|ás HH:mm"
-        Pattern todayPattern = Pattern.compile("hoje\\s*(?:[àaá]s)?\\s*(\\d{1,2}:\\d{2})");
+        Pattern todayPattern = Pattern.compile("hoje\\s*(?:[àaá]s)?\\s*(\\d{1,2}:\\d{2})", Pattern.CASE_INSENSITIVE);
         Matcher todayMatcher = todayPattern.matcher(input);
 
         if(todayMatcher.find()) {

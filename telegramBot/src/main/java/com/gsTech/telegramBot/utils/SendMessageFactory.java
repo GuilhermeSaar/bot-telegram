@@ -3,17 +3,42 @@ package com.gsTech.telegramBot.utils;
 import com.gsTech.telegramBot.DTO.EventDTO;
 import com.gsTech.telegramBot.utils.enums.CallbackAction;
 import com.gsTech.telegramBot.utils.enums.CreateCallbackAction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.generics.TelegramBot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class SendMessageFactory {
+
+    public EditMessageText editMessageText(Long chatId, Integer messageId, String text) {
+
+        var message = new EditMessageText();
+        message.setChatId(chatId);
+        message.setMessageId(messageId);
+        message.setText(text);
+
+        var backButton = new InlineKeyboardButton("\uD83D\uDD19 Voltar");
+        backButton.setCallbackData(CallbackAction.MENU.name());
+
+        var row = List.of(backButton);
+
+        List<List<InlineKeyboardButton>> rows = List.of(row);
+
+        var markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(rows);
+
+        message.setReplyMarkup(markup);
+
+        return message;
+    }
 
 
     /**
@@ -117,24 +142,28 @@ public class SendMessageFactory {
         message.setText(text);
 
 
-        InlineKeyboardButton button1 = new InlineKeyboardButton("➕ Nova tarefa");
+        var button1 = new InlineKeyboardButton("➕ Nova tarefa");
         button1.setCallbackData(CallbackAction.NEW_EVENT.name());
 
-        InlineKeyboardButton button2 = new InlineKeyboardButton("\uD83D\uDCCB Listar tarefas");
+        var button2 = new InlineKeyboardButton("\uD83D\uDCCB Listar tarefas");
         button2.setCallbackData(CallbackAction.LIST_EVENTS.name());
 
-        InlineKeyboardButton button3 = new InlineKeyboardButton("✏ Editar");
+        var button3 = new InlineKeyboardButton("✏ Editar");
         button3.setCallbackData(CallbackAction.EDIT.name());
 
-        InlineKeyboardButton button4 = new InlineKeyboardButton("\uD83D\uDDD1\uFE0F Excluir tarefa");
+        var button4 = new InlineKeyboardButton("\uD83D\uDDD1\uFE0F Excluir tarefa");
         button4.setCallbackData(CallbackAction.DELETE.name());
+
+        InlineKeyboardButton button5 = new InlineKeyboardButton("⏰ Adicionar Lembrete");
+        button5.setCallbackData(CallbackAction.NOTIFY.name());
 
         var row1 = List.of(button1);
         var row2 = List.of(button2);
         var row3 = List.of(button3);
         var row4 = List.of(button4);
+        var row5 = List.of(button5);
 
-        List<List<InlineKeyboardButton>> rows = List.of(row1, row2, row3, row4);
+        List<List<InlineKeyboardButton>> rows = List.of(row1, row2, row3, row4, row5);
 
         var markup = new InlineKeyboardMarkup();
         markup.setKeyboard(rows);
@@ -142,6 +171,30 @@ public class SendMessageFactory {
         message.setReplyMarkup(markup);
 
         return message;
+    }
+
+
+    public EditMessageText editMessageWithReturn(Long chatId, Integer messageId, String text) {
+
+        var backButton = new InlineKeyboardButton("\uD83D\uDD19 Voltar");
+        backButton.setCallbackData(CallbackAction.MENU.name());
+
+        var row = List.of(backButton);
+        List<List<InlineKeyboardButton>> rows = List.of(row);
+
+        var markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(rows);
+
+
+        var message = new EditMessageText();
+        message.setChatId(chatId.toString());
+        message.setMessageId(messageId);
+        message.setText(text);
+
+        message.setReplyMarkup(markup);
+
+        return message;
+
     }
 
 
@@ -172,18 +225,22 @@ public class SendMessageFactory {
         InlineKeyboardButton button2 = new InlineKeyboardButton("\uD83D\uDCCB Listar tarefas");
         button2.setCallbackData(CallbackAction.LIST_EVENTS.name());
 
-        InlineKeyboardButton button3 = new InlineKeyboardButton("✏ Editar");
+        InlineKeyboardButton button3 = new InlineKeyboardButton("✏ Editar tarefa");
         button3.setCallbackData(CallbackAction.EDIT.name());
 
         InlineKeyboardButton button4 = new InlineKeyboardButton("\uD83D\uDDD1\uFE0F Excluir tarefa");
         button4.setCallbackData(CallbackAction.DELETE.name());
 
+        InlineKeyboardButton button5 = new InlineKeyboardButton("⏰ Adicionar Lembrete");
+        button5.setCallbackData(CallbackAction.NOTIFY.name());
+
         var row1 = List.of(button1);
         var row2 = List.of(button2);
         var row3 = List.of(button3);
         var row4 = List.of(button4);
+      var row5 = List.of(button5);
 
-        List<List<InlineKeyboardButton>> rows = List.of(row1, row2, row3, row4);
+        List<List<InlineKeyboardButton>> rows = List.of(row1, row2, row3, row4, row5);
 
         var markup = new InlineKeyboardMarkup();
         markup.setKeyboard(rows);
@@ -357,6 +414,36 @@ public class SendMessageFactory {
         return message;
     }
 
+    public EditMessageText editMessageNotifyEvent(Long chatId, List<EventDTO> events, Integer messageId) {
+
+        String header = "Escolha uma tarefa para notificar:\n\n";
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+
+        for (EventDTO event : events) {
+
+            var editButton = new InlineKeyboardButton(event.getEventName());
+            editButton.setCallbackData(CallbackAction.EDIT_NOTIFY.name() + ":" + event.getId());
+
+            rows.add(List.of(editButton));
+        }
+
+        var backButton = new InlineKeyboardButton("\uD83D\uDD19 Voltar ao Menu");
+        backButton.setCallbackData(CallbackAction.MENU.name());
+        var back = List.of(backButton);
+        rows.add(back);
+
+        var markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(rows);
+
+        var message = new EditMessageText();
+        message.setChatId(chatId.toString());
+        message.setMessageId(messageId);
+        message.setText(header);
+        message.setReplyMarkup(markup);
+
+        return message;
+    }
+
 
     /**
      * Cria um objeto {@link EditMessageText} para editar uma mensagem existente, exibindo opções de edição
@@ -378,13 +465,34 @@ public class SendMessageFactory {
         buttons.add(List.of(buildButton("Editar nome", "EDIT_FIELD:NAME")));
         buttons.add(List.of(buildButton("Editar descrição", "EDIT_FIELD:DESCRIPTION")));
         buttons.add(List.of(buildButton("Editar data", "EDIT_FIELD:DATE")));
-
+        buttons.add(List.of(buildButton("\uD83D\uDD19 Voltar", CallbackAction.MENU.name())));
         markup.setKeyboard(buttons);
 
         var message = new EditMessageText();
         message.setChatId(chatId.toString());
         message.setMessageId(messageId);
         message.setText("Selecione um campo para editar:\n" + event);
+        message.setReplyMarkup(markup);
+
+        return message;
+    }
+
+    public EditMessageText editMessageNotifyOptions(Long chatId, Long eventId, Integer messageId) {
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+
+        rows.add(List.of(buildButton("⏰ 5 minutos antes", "NOTIFY_MINUTES:5:" + eventId)));
+        rows.add(List.of(buildButton("⏰ 10 minutos antes", "NOTIFY_MINUTES:10:" + eventId)));
+        rows.add(List.of(buildButton("⏰ 15 minutos antes", "NOTIFY_MINUTES:15:" + eventId)));
+
+        rows.add(List.of(buildButton("\uD83D\uDD19 Voltar", CallbackAction.NOTIFY.name())));
+
+        markup.setKeyboard(rows);
+
+        EditMessageText message = new EditMessageText();
+        message.setChatId(chatId.toString());
+        message.setMessageId(messageId);
+        message.setText("Escolha quanto tempo antes do evento você quer receber o lembrete:");
         message.setReplyMarkup(markup);
 
         return message;
